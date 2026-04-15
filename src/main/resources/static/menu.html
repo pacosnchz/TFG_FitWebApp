@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <title>FitWeb — Dashboard</title>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <style>
+        body{padding-top:56px}
+        .greeting{margin-bottom:1.8rem}
+        .greeting h2{font-size:22px;font-weight:700}
+        .greeting p{color:var(--text2);font-size:14px;margin-top:3px}
+    </style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div id="topbar">
+    <a href="/index.html" class="logo">Fit<span>Web</span></a>
+    <nav>
+        <a href="/menu.html"       id="nav-menu"       class="active">Dashboard</a>
+        <a href="/ejercicios.html" id="nav-ejercicios">Ejercicios</a>
+        <a href="/records.html"    id="nav-records">Mis récords</a>
+        <a href="/chatbot.html"    id="nav-chatbot">Entrenador IA</a>
+        <a href="/perfil.html"     id="nav-perfil">Perfil</a>
+    </nav>
+    <div class="topbar-right">
+        <a href="/perfil.html" class="avatar" id="user-avatar">?</a>
+        <button class="logout-btn" onclick="doLogout()">Salir</button>
+    </div>
+</div>
+
+<div class="page-content">
+    <div class="greeting">
+        <h2 id="greeting-text">Bienvenido 👋</h2>
+        <p id="greeting-sub">Cargando tu plan...</p>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="sc-label">Objetivo</div>
+            <div class="sc-val sc-accent" id="dash-objetivo">—</div>
+        </div>
+        <div class="stat-card">
+            <div class="sc-label">IMC</div>
+            <div class="sc-val" id="dash-imc">—</div>
+            <div class="sc-sub" id="dash-imc-label">—</div>
+        </div>
+        <div class="stat-card">
+            <div class="sc-label">Peso actual</div>
+            <div class="sc-val" id="dash-peso">— kg</div>
+        </div>
+        <div class="stat-card">
+            <div class="sc-label">Récords guardados</div>
+            <div class="sc-val" id="dash-records">0</div>
+        </div>
+    </div>
+
+    <div class="two-col">
+        <!-- ENTRENO DEL DÍA -->
+        <div class="card">
+            <div class="card-title">
+                Entrenamiento del día
+                <span id="dash-dia">—</span>
+            </div>
+            <div class="workout-list" id="workout-list">
+                <div class="workout-item">
+                    <div class="wi-icon">🏋️</div>
+                    <div class="wi-info"><p>Press de banca</p><small>4 series × 8 reps · 60 seg descanso</small></div>
+                    <span class="wi-badge badge-green">Completado</span>
+                </div>
+                <div class="workout-item">
+                    <div class="wi-icon">🔄</div>
+                    <div class="wi-info"><p>Dominadas</p><small>3 series × 6 reps</small></div>
+                    <span class="wi-badge badge-amber">Pendiente</span>
+                </div>
+                <div class="workout-item">
+                    <div class="wi-icon">💪</div>
+                    <div class="wi-info"><p>Press militar</p><small>3 series × 10 reps</small></div>
+                    <span class="wi-badge badge-amber">Pendiente</span>
+                </div>
+                <div class="workout-item">
+                    <div class="wi-icon">🤸</div>
+                    <div class="wi-info"><p>Estiramiento hombros</p><small>5 min · Post-entreno</small></div>
+                    <span class="wi-badge badge-amber">Pendiente</span>
+                </div>
+            </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:1.2rem">
+            <!-- PROGRESO SEMANAL -->
+            <div class="card">
+                <div class="card-title">Progreso semanal</div>
+                <div class="progress-bar-wrap">
+                    <div class="pb-label"><span>Entrenamientos</span><span>3/5</span></div>
+                    <div class="pb"><div class="pb-fill" style="width:60%"></div></div>
+                </div>
+                <div class="progress-bar-wrap">
+                    <div class="pb-label"><span>Objetivos completados</span><span>7/10</span></div>
+                    <div class="pb"><div class="pb-fill" style="width:70%"></div></div>
+                </div>
+            </div>
+
+            <!-- CALORÍAS -->
+            <div class="card">
+                <div class="card-title">Calorías estimadas</div>
+                <div class="imc-display" style="padding:.5rem">
+                    <div style="font-size:28px;font-weight:800;color:var(--accent)" id="dash-cals">—</div>
+                    <div style="font-size:12px;color:var(--text2)">kcal/día recomendadas</div>
+                </div>
+                <div class="mini-macro">
+                    <div class="mm"><p>Proteína</p><strong id="dash-prot" style="color:#378add">—</strong></div>
+                    <div class="mm"><p>Carbos</p><strong id="dash-carbs" style="color:#8bc34a">—</strong></div>
+                    <div class="mm"><p>Grasas</p><strong id="dash-fats" style="color:var(--accent)">—</strong></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ACCESOS RÁPIDOS -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-top:1.2rem">
+        <a href="/ejercicios.html" style="text-decoration:none">
+            <div class="card" style="text-align:center;cursor:pointer;transition:.2s" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+                <div style="font-size:28px;margin-bottom:.5rem">🏋️</div>
+                <div style="font-weight:600;font-size:14px">Biblioteca de ejercicios</div>
+                <div style="font-size:12px;color:var(--text2);margin-top:4px">Ver todos los ejercicios</div>
+            </div>
+        </a>
+        <a href="/records.html" style="text-decoration:none">
+            <div class="card" style="text-align:center;cursor:pointer;transition:.2s" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+                <div style="font-size:28px;margin-bottom:.5rem">🏆</div>
+                <div style="font-weight:600;font-size:14px">Mis récords</div>
+                <div style="font-size:12px;color:var(--text2);margin-top:4px">Gestionar mis PRs</div>
+            </div>
+        </a>
+        <a href="/chatbot.html" style="text-decoration:none">
+            <div class="card" style="text-align:center;cursor:pointer;transition:.2s" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+                <div style="font-size:28px;margin-bottom:.5rem">🤖</div>
+                <div style="font-weight:600;font-size:14px">Entrenador IA</div>
+                <div style="font-size:12px;color:var(--text2);margin-top:4px">Hablar con mi coach</div>
+            </div>
+        </a>
+        <a href="/perfil.html" style="text-decoration:none">
+            <div class="card" style="text-align:center;cursor:pointer;transition:.2s" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+                <div style="font-size:28px;margin-bottom:.5rem">👤</div>
+                <div style="font-weight:600;font-size:14px">Mi perfil</div>
+                <div style="font-size:12px;color:var(--text2);margin-top:4px">Ver y editar mis datos</div>
+            </div>
+        </a>
+    </div>
+</div>
+
+<script src="/js/auth.js"></script>
+<script src="/js/api.js"></script>
+<script>
+    const user = requireAuth();
+
+    // Rellenar UI con datos del usuario
+    const hr = new Date().getHours();
+    const sal = hr < 13 ? 'Buenos días' : hr < 20 ? 'Buenas tardes' : 'Buenas noches';
+    const dias = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+    const dia = dias[new Date().getDay()];
+
+    document.getElementById('greeting-text').textContent = sal + ', ' + user.nombre.split(' ')[0] + ' 👋';
+    document.getElementById('greeting-sub').textContent  = dia + ' · Semana en curso';
+    document.getElementById('dash-dia').textContent      = dia + ' — Tren superior';
+    document.getElementById('user-avatar').textContent   = getInitials(user.nombre);
+
+    const imc  = getIMC(user.peso, user.altura);
+    const cals = calsTDEE(user);
+    const prot = Math.round(user.peso * 2);
+    const fats = Math.round(cals * 0.25 / 9);
+    const carbs = Math.round((cals - prot * 4 - fats * 9) / 4);
+
+    document.getElementById('dash-objetivo').textContent  = user.objetivo;
+    document.getElementById('dash-imc').textContent       = imc;
+    document.getElementById('dash-imc-label').textContent = imcLabel(imc);
+    document.getElementById('dash-peso').textContent      = user.peso + ' kg';
+    document.getElementById('dash-cals').textContent      = cals.toLocaleString('es-ES');
+    document.getElementById('dash-prot').textContent      = prot + 'g';
+    document.getElementById('dash-carbs').textContent     = carbs + 'g';
+    document.getElementById('dash-fats').textContent      = fats + 'g';
+
+    // Cargar número de récords
+    apiGetRecords(user.id).then(data => {
+      document.getElementById('dash-records').textContent = data.length;
+    }).catch(() => {});
+</script>
+</body>
+</html>
