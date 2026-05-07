@@ -19,7 +19,7 @@
         .chat-input-area{display:flex;gap:8px;border-top:1px solid var(--border);padding-top:1rem}
         .chat-input-area input{flex:1;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius);color:var(--text);padding:10px 14px;font-size:14px;outline:none}
         .chat-input-area input:focus{border-color:var(--accent)}
-        .send-btn{background:var(--accent);color:#fff;border:none;width:42px;height:42px;border-radius:var(--radius);font-size:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+        .send-btn{background:var(--accent);color:#fff;border:none;width:42px;height:42px;border-radius:var(--radius);font-size:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer}
         .send-btn:hover{background:var(--accent2)}
         .msg{display:flex;gap:10px;align-items:flex-start}
         .msg.user{flex-direction:row-reverse}
@@ -40,15 +40,15 @@
 </head>
 <body>
 
-<!-- TOPBAR -->
 <div id="topbar">
     <a href="/index.html" class="logo">Fit<span>Web</span></a>
     <nav>
-        <a href="/menu.html"       id="nav-menu">Dashboard</a>
-        <a href="/ejercicios.html" id="nav-ejercicios">Ejercicios</a>
-        <a href="/records.html"    id="nav-records">Mis récords</a>
-        <a href="/chatbot.html"    id="nav-chatbot" class="active">Entrenador IA</a>
-        <a href="/perfil.html"     id="nav-perfil">Perfil</a>
+        <a href="/menu.html">Dashboard</a>
+        <a href="/ejercicios.html">Ejercicios</a>
+        <a href="/rutinas.html">Rutinas</a>
+        <a href="/records.html">Mis récords</a>
+        <a href="/chatbot.html" class="active">Entrenador IA</a>
+        <a href="/perfil.html">Perfil</a>
     </nav>
     <div class="topbar-right">
         <a href="/perfil.html" class="avatar" id="user-avatar">?</a>
@@ -61,7 +61,6 @@
         <h2>🤖 Entrenador personal IA</h2>
         <p>Pregúntame sobre rutinas, nutrición, estiramientos o cualquier duda sobre tu entrenamiento</p>
     </div>
-
     <div class="chat-messages" id="chat-messages">
         <div class="msg bot">
             <div class="msg-avatar bot-av">🤖</div>
@@ -71,7 +70,6 @@
             </div>
         </div>
     </div>
-
     <div class="chat-bottom">
         <div class="suggested-qs" id="suggested-qs">
             <div class="sq" onclick="sendSuggested(this)">¿Qué como antes de entrenar?</div>
@@ -97,7 +95,6 @@
 
     const chatHistory = [];
 
-    // Mensaje de bienvenida personalizado
     const hora = new Date().getHours();
     const saludo = hora < 13 ? 'Buenos días' : hora < 20 ? 'Buenas tardes' : 'Buenas noches';
     const lesionesMsg = user.lesiones && user.lesiones.length
@@ -113,9 +110,7 @@
     }
 
     function addMsg(content, role) {
-      // Ocultar sugerencias tras el primer mensaje del usuario
       if (role === 'user') document.getElementById('suggested-qs').style.display = 'none';
-
       const msgs = document.getElementById('chat-messages');
       const div = document.createElement('div');
       div.className = 'msg ' + (role === 'user' ? 'user' : 'bot');
@@ -155,33 +150,33 @@
       chatHistory.push({role: 'user', content: msg});
       showTyping();
 
-      const sysPrompt = `Eres FitCoach, el entrenador personal IA de FitWeb, una app de asesoramiento físico.
-    Hablas en español, eres motivador, cercano y profesional. Usas emojis con moderación.
-    El usuario se llama ${user.nombre}, tiene ${user.edad} años, pesa ${user.peso}kg, mide ${user.altura}cm.
-    Su objetivo es "${user.objetivo}" y su IMC es ${getIMC(user.peso, user.altura)} (${imcLabel(getIMC(user.peso, user.altura))}).
-    Sus calorías diarias recomendadas son ${calsTDEE(user)} kcal.
-    ${user.lesiones && user.lesiones.length ? `Tiene lesiones en: ${user.lesiones.join(', ')}. Siempre advierte y adapta ejercicios según estas lesiones.` : 'No tiene lesiones declaradas.'}
-    Responde de forma concisa y práctica. Máximo 4 párrafos. Si propones ejercicios, ten en cuenta sus lesiones.`;
+      const sysPrompt = `Eres FitCoach, el entrenador personal IA de FitWeb. Hablas en español, eres motivador, cercano y profesional. Usas emojis con moderación.
+El usuario se llama ${user.nombre}, tiene ${user.edad} años, pesa ${user.peso}kg, mide ${user.altura}cm.
+Su objetivo es "${user.objetivo}" y su IMC es ${getIMC(user.peso, user.altura)} (${imcLabel(getIMC(user.peso, user.altura))}).
+Sus calorías diarias recomendadas son ${calsTDEE(user)} kcal.
+${user.lesiones && user.lesiones.length ? `Tiene lesiones en: ${user.lesiones.join(', ')}. Siempre advierte y adapta ejercicios según estas lesiones.` : 'No tiene lesiones declaradas.'}
+Responde de forma concisa y práctica. Máximo 4 párrafos.`;
 
       try {
-        const res = await fetch('https://api.anthropic.com/v1/messages', {
+        const messages = [
+          {role: 'system', content: sysPrompt},
+          ...chatHistory.slice(-12)
+        ];
+
+        const res = await fetch('/api/chatbot/mensaje', {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({
-            model: 'claude-sonnet-4-20250514',
-            max_tokens: 700,
-            system: sysPrompt,
-            messages: chatHistory.slice(-12)
-          })
+          body: JSON.stringify({ messages })
         });
+
         const data = await res.json();
         removeTyping();
-        const reply = data.content?.[0]?.text || 'Lo siento, ha habido un error. Inténtalo de nuevo.';
+        const reply = data.choices?.[0]?.message?.content || 'Lo siento, ha habido un error. Inténtalo de nuevo.';
         chatHistory.push({role: 'assistant', content: reply});
         addMsg(reply, 'bot');
       } catch(e) {
         removeTyping();
-        addMsg('Error de conexión. Por favor revisa tu conexión e inténtalo de nuevo.', 'bot');
+        addMsg('Error de conexión. Inténtalo de nuevo.', 'bot');
       }
     }
 

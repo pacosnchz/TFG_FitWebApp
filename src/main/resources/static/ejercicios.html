@@ -11,15 +11,15 @@
 </head>
 <body>
 
-<!-- TOPBAR -->
 <div id="topbar">
     <a href="/index.html" class="logo">Fit<span>Web</span></a>
     <nav>
-        <a href="/menu.html"       id="nav-menu">Dashboard</a>
-        <a href="/ejercicios.html" id="nav-ejercicios" class="active">Ejercicios</a>
-        <a href="/records.html"    id="nav-records">Mis récords</a>
-        <a href="/chatbot.html"    id="nav-chatbot">Entrenador IA</a>
-        <a href="/perfil.html"     id="nav-perfil">Perfil</a>
+        <a href="/menu.html">Dashboard</a>
+        <a href="/ejercicios.html" class="active">Ejercicios</a>
+        <a href="/rutinas.html">Rutinas</a>
+        <a href="/records.html">Mis récords</a>
+        <a href="/chatbot.html">Entrenador IA</a>
+        <a href="/perfil.html">Perfil</a>
     </nav>
     <div class="topbar-right">
         <a href="/perfil.html" class="avatar" id="user-avatar">?</a>
@@ -29,6 +29,12 @@
 
 <div class="page-content">
     <div class="section-title">Biblioteca de ejercicios</div>
+
+    <div style="margin-bottom:1rem">
+        <input type="text" id="search-input" placeholder="🔍 Buscar ejercicio..."
+               style="width:100%;max-width:400px;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius);color:var(--text);padding:9px 14px;font-size:14px;outline:none"
+               oninput="searchExercises(this.value)"/>
+    </div>
 
     <div class="filter-bar">
         <button class="filter-btn active" onclick="filterEx('todos', this)">Todos</button>
@@ -72,85 +78,117 @@
     let allExercises = [];
 
     async function loadExercises() {
-      try {
-        allExercises = await apiGetEjercicios();
-        renderExercises('todos');
-      } catch(e) {
-        document.getElementById('exercise-grid').innerHTML =
-          '<div style="color:var(--red);font-size:14px">Error cargando ejercicios.</div>';
-      }
+        try {
+            allExercises = await apiGetEjercicios();
+            renderExercises('todos');
+        } catch(e) {
+            document.getElementById('exercise-grid').innerHTML =
+                '<div style="color:var(--red);font-size:14px">Error cargando ejercicios.</div>';
+        }
     }
 
     function renderExercises(cat) {
-      const grid = document.getElementById('exercise-grid');
-      const filtered = cat === 'todos' ? allExercises : allExercises.filter(e => e.categoria === cat);
-      const lesiones = user.lesiones || [];
-
-      if (!filtered.length) {
-        grid.innerHTML = '<div style="color:var(--text3);font-size:14px">No hay ejercicios en esta categoría.</div>';
-        return;
-      }
-
-      grid.innerHTML = filtered.map(e => {
-        const warn = e.lesionesRelacionadas && e.lesionesRelacionadas.some(l => lesiones.includes(l));
-        return `<div class="ex-card${warn ? ' has-lesion' : ''}" onclick="openExModal(${e.id})">
-          <div class="ex-top">
-            <div class="ex-icon">${e.icono || '💪'}</div>
-            <div>
-              <div class="ex-name">${e.nombre}</div>
-              <div class="ex-cat">${e.categoria.charAt(0).toUpperCase() + e.categoria.slice(1)}</div>
-            </div>
-          </div>
-          <div class="ex-meta">
-            <span>${e.musculo}</span>
-            <span>${e.series}</span>
-          </div>
-          ${warn ? `<div class="ex-warn">Adaptar por lesión en ${e.lesionesRelacionadas.filter(l => lesiones.includes(l)).join(', ')}</div>` : ''}
-          <div style="margin-top:10px;font-size:11px;color:var(--accent3);display:flex;align-items:center;gap:4px">
-            ▶ Ver tutorial en YouTube
-          </div>
-        </div>`;
-      }).join('');
+        const grid = document.getElementById('exercise-grid');
+        const filtered = cat === 'todos' ? allExercises : allExercises.filter(e => e.categoria === cat);
+        const lesiones = user.lesiones || [];
+        if (!filtered.length) {
+            grid.innerHTML = '<div style="color:var(--text3);font-size:14px">No hay ejercicios en esta categoría.</div>';
+            return;
+        }
+        grid.innerHTML = filtered.map(e => {
+            const warn = e.lesionesRelacionadas && e.lesionesRelacionadas.some(l => lesiones.includes(l));
+            return `<div class="ex-card${warn ? ' has-lesion' : ''}" onclick="openExModal(${e.id})">
+              <div class="ex-top">
+                <div class="ex-icon">${e.icono || '💪'}</div>
+                <div>
+                  <div class="ex-name">${e.nombre}</div>
+                  <div class="ex-cat">${e.categoria.charAt(0).toUpperCase() + e.categoria.slice(1)}</div>
+                </div>
+              </div>
+              <div class="ex-meta">
+                <span>${e.musculo}</span>
+                <span>${e.series}</span>
+              </div>
+              ${warn ? `<div class="ex-warn">Adaptar por lesión en ${e.lesionesRelacionadas.filter(l => lesiones.includes(l)).join(', ')}</div>` : ''}
+              <div style="margin-top:10px;font-size:11px;color:var(--accent3);display:flex;align-items:center;gap:4px">
+                ▶ Ver tutorial en YouTube
+              </div>
+            </div>`;
+        }).join('');
     }
 
     function filterEx(cat, btn) {
-      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      renderExercises(cat);
+        document.getElementById('search-input').value = '';
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderExercises(cat);
+    }
+
+    function searchExercises(query) {
+        const q = query.toLowerCase().trim();
+        if (!q) { renderExercises('todos'); return; }
+        const lesiones = user.lesiones || [];
+        const filtered = allExercises.filter(e =>
+            e.nombre.toLowerCase().includes(q) ||
+            e.musculo.toLowerCase().includes(q) ||
+            e.categoria.toLowerCase().includes(q)
+        );
+        const grid = document.getElementById('exercise-grid');
+        if (!filtered.length) {
+            grid.innerHTML = '<div style="color:var(--text3);font-size:14px">No se encontraron ejercicios.</div>';
+            return;
+        }
+        grid.innerHTML = filtered.map(e => {
+            const warn = e.lesionesRelacionadas && e.lesionesRelacionadas.some(l => lesiones.includes(l));
+            return `<div class="ex-card${warn ? ' has-lesion' : ''}" onclick="openExModal(${e.id})">
+              <div class="ex-top">
+                <div class="ex-icon">${e.icono || '💪'}</div>
+                <div>
+                  <div class="ex-name">${e.nombre}</div>
+                  <div class="ex-cat">${e.categoria.charAt(0).toUpperCase() + e.categoria.slice(1)}</div>
+                </div>
+              </div>
+              <div class="ex-meta"><span>${e.musculo}</span><span>${e.series}</span></div>
+              ${warn ? `<div class="ex-warn">Adaptar por lesión en ${e.lesionesRelacionadas.filter(l => lesiones.includes(l)).join(', ')}</div>` : ''}
+              <div style="margin-top:10px;font-size:11px;color:var(--accent3);display:flex;align-items:center;gap:4px">
+                ▶ Ver tutorial en YouTube
+              </div>
+            </div>`;
+        }).join('');
     }
 
     function openExModal(id) {
-      const e = allExercises.find(ex => ex.id === id);
-      if (!e) return;
-      const lesiones = user.lesiones || [];
-      document.getElementById('ex-modal-title').textContent = (e.icono || '💪') + ' ' + e.nombre;
-      document.getElementById('ex-modal-iframe').src =
-        `https://www.youtube.com/embed/${e.youtubeid}?autoplay=1&rel=0`;
-      document.getElementById('ex-modal-tags').innerHTML = [
-        `<span class="ex-modal-tag"><strong>Músculo</strong> ${e.musculo}</span>`,
-        `<span class="ex-modal-tag"><strong>Series</strong> ${e.series}</span>`,
-        `<span class="ex-modal-tag"><strong>Tipo</strong> ${e.categoria}</span>`
-      ].join('');
-      document.getElementById('ex-modal-desc').textContent = e.descripcion || '';
-      const warnEl = document.getElementById('ex-modal-warn');
-      const affected = e.lesionesRelacionadas ? e.lesionesRelacionadas.filter(l => lesiones.includes(l)) : [];
-      if (affected.length) {
-        warnEl.textContent = '⚠ Precaución: este ejercicio puede afectar tu lesión en ' +
-          affected.join(', ') + '. Consulta con tu médico o reduce la carga.';
-        warnEl.classList.remove('hidden');
-      } else {
-        warnEl.classList.add('hidden');
-      }
-      document.getElementById('ex-modal').classList.remove('hidden');
+        const e = allExercises.find(ex => ex.id === id);
+        if (!e) return;
+        const lesiones = user.lesiones || [];
+        document.getElementById('ex-modal-title').textContent = (e.icono || '💪') + ' ' + e.nombre;
+        document.getElementById('ex-modal-iframe').src =
+            `https://www.youtube.com/embed/${e.youtubeid}?autoplay=1&rel=0`;
+        document.getElementById('ex-modal-tags').innerHTML = [
+            `<span class="ex-modal-tag"><strong>Músculo</strong> ${e.musculo}</span>`,
+            `<span class="ex-modal-tag"><strong>Series</strong> ${e.series}</span>`,
+            `<span class="ex-modal-tag"><strong>Tipo</strong> ${e.categoria}</span>`
+        ].join('');
+        document.getElementById('ex-modal-desc').textContent = e.descripcion || '';
+        const warnEl = document.getElementById('ex-modal-warn');
+        const affected = e.lesionesRelacionadas ? e.lesionesRelacionadas.filter(l => lesiones.includes(l)) : [];
+        if (affected.length) {
+            warnEl.textContent = '⚠ Precaución: este ejercicio puede afectar tu lesión en ' +
+                affected.join(', ') + '. Consulta con tu médico o reduce la carga.';
+            warnEl.classList.remove('hidden');
+        } else {
+            warnEl.classList.add('hidden');
+        }
+        document.getElementById('ex-modal').classList.remove('hidden');
     }
 
     function closeExModal() {
-      document.getElementById('ex-modal').classList.add('hidden');
-      document.getElementById('ex-modal-iframe').src = '';
+        document.getElementById('ex-modal').classList.add('hidden');
+        document.getElementById('ex-modal-iframe').src = '';
     }
 
     function handleOverlayClick(e) {
-      if (e.target === document.getElementById('ex-modal')) closeExModal();
+        if (e.target === document.getElementById('ex-modal')) closeExModal();
     }
 
     loadExercises();

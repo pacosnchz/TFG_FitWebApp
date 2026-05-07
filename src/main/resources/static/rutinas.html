@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>FitWeb — Mis Rutinas</title>
+  <link rel="stylesheet" href="/css/styles.css"/>
+  <style>
+    :root {
+      --bg:    #0f0f0f;
+      --bg2:   #161616;
+      --bg3:   #1e1e1e;
+      --bg4:   #252525;
+      --border:#2a2a2a;
+      --border2:#333;
+      --text:  #f0f0f0;
+      --text2: #888;
+      --text3: #555;
+      --accent:#f97316;
+      --accent2:#fb923c;
+      --green: #22c55e;
+      --red:   #ef4444;
+      --radius:10px;
+      --radius2:6px;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh}
+
+    nav{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:100}
+    .nav-logo{font-size:18px;font-weight:800;color:var(--accent)}
+    .nav-logo span{color:var(--text)}
+    .nav-links{display:flex;gap:4px}
+    .nav-links a{color:var(--text2);text-decoration:none;font-size:13px;padding:6px 12px;border-radius:var(--radius2);transition:.15s}
+    .nav-links a:hover,.nav-links a.active{background:var(--bg3);color:var(--text)}
+    .nav-user{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text2)}
+    .nav-avatar{width:30px;height:30px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:#fff}
+
+    .page{max-width:1100px;margin:0 auto;padding:2rem 1.5rem}
+    .page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;flex-wrap:wrap;gap:12px}
+    .page-title{font-size:24px;font-weight:800}
+    .page-title span{color:var(--accent)}
+    .header-actions{display:flex;gap:10px}
+
+    .btn{padding:9px 18px;border-radius:var(--radius2);font-size:13px;font-weight:600;cursor:pointer;border:none;transition:.15s;display:inline-flex;align-items:center;gap:6px}
+    .btn-primary{background:var(--accent);color:#fff}
+    .btn-primary:hover{background:var(--accent2)}
+    .btn-ai{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff}
+    .btn-ai:hover{opacity:.9}
+    .btn-ghost{background:transparent;color:var(--text2);border:1px solid var(--border2)}
+    .btn-ghost:hover{background:var(--bg3);color:var(--text)}
+    .btn-danger{background:transparent;color:var(--red);border:1px solid #ef444433}
+    .btn-danger:hover{background:#ef44441a}
+    .btn-sm{padding:6px 12px;font-size:12px}
+
+    .tabs{display:flex;gap:4px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius2);padding:4px;margin-bottom:1.5rem;width:fit-content}
+    .tab{padding:7px 16px;border:none;background:none;color:var(--text2);border-radius:4px;font-size:13px;font-weight:500;cursor:pointer;transition:.15s}
+    .tab.active{background:var(--accent);color:#fff}
+
+    .rutinas-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+    .rutina-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:.2s}
+    .rutina-card:hover{border-color:var(--border2);transform:translateY(-2px)}
+    .rutina-card.completada{opacity:.6}
+    .rutina-card-header{padding:16px;display:flex;align-items:flex-start;justify-content:space-between;border-bottom:1px solid var(--border)}
+    .rutina-card-title{font-size:15px;font-weight:700}
+    .rutina-card-dia{font-size:12px;color:var(--accent);font-weight:600;margin-top:2px}
+    .rutina-badge{padding:3px 8px;border-radius:20px;font-size:11px;font-weight:600}
+    .badge-pendiente{background:#f9731620;color:var(--accent)}
+    .badge-completada{background:#22c55e20;color:var(--green)}
+    .badge-ia{background:#6366f120;color:#818cf8}
+    .rutina-card-body{padding:16px}
+    .ejercicio-item{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border)}
+    .ejercicio-item:last-child{border-bottom:none}
+    .ejercicio-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0}
+    .ejercicio-name{font-size:13px;flex:1}
+    .ejercicio-meta{font-size:12px;color:var(--text2)}
+    .rutina-card-footer{padding:12px 16px;display:flex;gap:8px;border-top:1px solid var(--border)}
+    .more-ejercicios{font-size:12px;color:var(--text3);padding:6px 0}
+
+    .empty-state{text-align:center;padding:4rem 2rem;color:var(--text2)}
+    .empty-icon{font-size:48px;margin-bottom:1rem}
+    .empty-state h3{font-size:18px;font-weight:700;color:var(--text);margin-bottom:.5rem}
+    .empty-state p{font-size:14px;margin-bottom:1.5rem}
+
+    .modal-overlay{position:fixed;inset:0;background:#000000cc;z-index:1000;display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;pointer-events:none;transition:.2s}
+    .modal-overlay.open{opacity:1;pointer-events:all}
+    .modal{background:var(--bg2);border:1px solid var(--border2);border-radius:14px;width:100%;max-width:640px;max-height:90vh;overflow-y:auto;transform:translateY(20px);transition:.2s}
+    .modal-overlay.open .modal{transform:translateY(0)}
+    .modal-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--bg2);z-index:1}
+    .modal-title{font-size:17px;font-weight:700}
+    .modal-close{background:none;border:none;color:var(--text2);cursor:pointer;font-size:20px;padding:4px;line-height:1}
+    .modal-body{padding:24px}
+    .modal-footer{padding:16px 24px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end}
+
+    .form-group{margin-bottom:16px}
+    .form-label{display:block;font-size:13px;font-weight:600;margin-bottom:6px;color:var(--text2)}
+    .form-input,.form-select,.form-textarea{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius2);padding:9px 12px;color:var(--text);font-size:14px;outline:none;transition:.15s;font-family:inherit}
+    .form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--accent)}
+    .form-select option{background:var(--bg3)}
+    .form-textarea{resize:vertical;min-height:70px}
+    .form-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+    .form-row-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+    .ejercicios-list{display:flex;flex-direction:column;gap:10px;margin-bottom:12px}
+    .ejercicio-form-item{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius2);padding:12px}
+    .ejercicio-form-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+    .ejercicio-num{font-size:12px;font-weight:700;color:var(--accent)}
+    .btn-remove{background:none;border:none;color:var(--text3);cursor:pointer;font-size:16px;padding:2px;line-height:1;transition:.15s}
+    .btn-remove:hover{color:var(--red)}
+
+    .ai-header{background:linear-gradient(135deg,#1e1b4b,#1e1e1e);border-radius:10px;padding:16px;margin-bottom:20px;display:flex;align-items:center;gap:12px}
+    .ai-icon{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+    .ai-header-text h3{font-size:15px;font-weight:700}
+    .ai-header-text p{font-size:12px;color:var(--text2);margin-top:2px}
+    .muscle-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:6px}
+    .muscle-chip{border:1px solid var(--border2);border-radius:var(--radius2);padding:10px 8px;cursor:pointer;text-align:center;transition:.2s;font-size:12px;font-weight:600;color:var(--text2)}
+    .muscle-chip:hover{border-color:var(--accent);color:var(--accent)}
+    .muscle-chip.selected{background:#f9731620;border-color:var(--accent);color:var(--accent)}
+    .muscle-chip .chip-icon{font-size:20px;display:block;margin-bottom:4px}
+    .nivel-row{display:flex;gap:8px;margin-top:6px}
+    .nivel-btn{flex:1;padding:8px;border:1px solid var(--border2);border-radius:var(--radius2);background:none;color:var(--text2);font-size:12px;font-weight:600;cursor:pointer;transition:.2s}
+    .nivel-btn.selected{background:#f9731620;border-color:var(--accent);color:var(--accent)}
+    .duracion-row{display:flex;gap:8px;margin-top:6px}
+    .dur-btn{flex:1;padding:8px;border:1px solid var(--border2);border-radius:var(--radius2);background:none;color:var(--text2);font-size:12px;font-weight:600;cursor:pointer;transition:.2s}
+    .dur-btn.selected{background:#f9731620;border-color:var(--accent);color:var(--accent)}
+    .ai-generating{text-align:center;padding:2rem;display:none}
+    .ai-generating .spinner{width:40px;height:40px;border:3px solid var(--border2);border-top-color:#6366f1;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 1rem}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    .toast{position:fixed;bottom:24px;right:24px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius);padding:12px 18px;font-size:13px;font-weight:500;z-index:9999;transform:translateY(80px);opacity:0;transition:.3s;max-width:300px}
+    .toast.show{transform:translateY(0);opacity:1}
+    .toast.success{border-left:3px solid var(--green)}
+    .toast.error{border-left:3px solid var(--red)}
+
+    .section-label{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px;margin-top:20px}
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Fit<span>Web</span></div>
+  <div class="nav-links">
+    <a href="/menu.html">Dashboard</a>
+    <a href="/ejercicios.html">Ejercicios</a>
+    <a href="/rutinas.html" class="active">Rutinas</a>
+    <a href="/records.html">Récords</a>
+    <a href="/chatbot.html">IA Coach</a>
+    <a href="/perfil.html">Perfil</a>
+  </div>
+  <div class="nav-user">
+    <span id="nav-name">Usuario</span>
+    <div class="nav-avatar" id="nav-avatar">U</div>
+  </div>
+</nav>
+
+<div class="page">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Mis <span>Rutinas</span></div>
+      <div style="font-size:13px;color:var(--text2);margin-top:4px">Crea y gestiona tus entrenamientos</div>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-ai" onclick="openAIModal()">✨ Generar con IA</button>
+      <button class="btn btn-primary" onclick="openCreateModal()">+ Nueva rutina</button>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="setTab('todas',this)">Todas</button>
+    <button class="tab" onclick="setTab('pendientes',this)">Pendientes</button>
+    <button class="tab" onclick="setTab('completadas',this)">Completadas</button>
+  </div>
+
+  <div class="rutinas-grid" id="rutinas-grid">
+    <div class="empty-state" id="empty-state" style="grid-column:1/-1;display:none">
+      <div class="empty-icon">🏋️</div>
+      <h3>Sin rutinas aún</h3>
+      <p>Crea tu primera rutina manualmente o déjale la tarea a la IA</p>
+      <div style="display:flex;gap:10px;justify-content:center">
+        <button class="btn btn-ai" onclick="openAIModal()">✨ Generar con IA</button>
+        <button class="btn btn-primary" onclick="openCreateModal()">+ Nueva rutina</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL CREAR -->
+<div class="modal-overlay" id="modal-crear">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Nueva rutina</div>
+      <button class="modal-close" onclick="closeModal('modal-crear')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row-2">
+        <div class="form-group">
+          <label class="form-label">Nombre *</label>
+          <input class="form-input" id="r-nombre" placeholder="Ej: Push Day"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Día</label>
+          <select class="form-select" id="r-dia">
+            <option value="">Sin asignar</option>
+            <option>Lunes</option><option>Martes</option><option>Miércoles</option>
+            <option>Jueves</option><option>Viernes</option><option>Sábado</option><option>Domingo</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Fecha</label>
+        <input class="form-input" id="r-fecha" type="date"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Descripción (opcional)</label>
+        <textarea class="form-textarea" id="r-desc" placeholder="Ej: Entrenamiento de empuje..."></textarea>
+      </div>
+      <div class="section-label">Ejercicios</div>
+      <div class="ejercicios-list" id="ejercicios-list"></div>
+      <button class="btn btn-ghost btn-sm" onclick="addEjercicioForm()">+ Añadir ejercicio</button>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-crear')">Cancelar</button>
+      <button class="btn btn-primary" onclick="guardarRutina()">Guardar rutina</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL IA -->
+<div class="modal-overlay" id="modal-ia">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">✨ Generar rutina con IA</div>
+      <button class="modal-close" onclick="closeModal('modal-ia')">×</button>
+    </div>
+    <div class="modal-body" id="ia-form-body">
+      <div class="ai-header">
+        <div class="ai-icon">🤖</div>
+        <div class="ai-header-text">
+          <h3>Tu entrenador personal IA</h3>
+          <p>Selecciona qué quieres entrenar hoy y la IA generará tu rutina personalizada</p>
+        </div>
+      </div>
+      <div class="section-label">¿Qué grupos musculares quieres trabajar?</div>
+      <div class="muscle-grid">
+        <div class="muscle-chip" onclick="toggleMuscle(this,'Pecho')"><span class="chip-icon">💪</span>Pecho</div>
+        <div class="muscle-chip" onclick="toggleMuscle(this,'Espalda')"><span class="chip-icon">🔙</span>Espalda</div>
+        <div class="muscle-chip" onclick="toggleMuscle(this,'Hombros')"><span class="chip-icon">🦾</span>Hombros</div>
+        <div class="muscle-chip" onclick="toggleMuscle(this,'Bíceps')"><span class="chip-icon">💪</span>Bíceps</div>
+        <div class="muscle-chip" onclick="toggleMuscle(this,'Tríceps')"><span class="chip-icon">🦵</span>Tríceps</div>
+        <div class="muscle-chip" onclick="toggleMuscle(this,'Abdomen')"><span class="chip-icon">🎯</span>Abdomen</div>
+        <div class="muscle-chip" onclick="toggleMuscle(this,'Piernas')"><span class="chip-icon">🦵</span>Piernas</div>
+        <div class="muscle-chip" onclick="toggleMuscle(this,'Glúteos')"><span class="chip-icon">🍑</span>Glúteos</div>
+        <div class="muscle-chip" onclick="toggleMuscle(this,'Cardio')"><span class="chip-icon">🏃</span>Cardio</div>
+      </div>
+      <div class="section-label">Nivel de intensidad</div>
+      <div class="nivel-row">
+        <button class="nivel-btn selected" onclick="selectNivel(this,'Principiante')">🟢 Principiante</button>
+        <button class="nivel-btn" onclick="selectNivel(this,'Intermedio')">🟡 Intermedio</button>
+        <button class="nivel-btn" onclick="selectNivel(this,'Avanzado')">🔴 Avanzado</button>
+      </div>
+      <div class="section-label">Duración aproximada</div>
+      <div class="duracion-row">
+        <button class="dur-btn" onclick="selectDur(this,'30 min')">30 min</button>
+        <button class="dur-btn selected" onclick="selectDur(this,'45 min')">45 min</button>
+        <button class="dur-btn" onclick="selectDur(this,'60 min')">60 min</button>
+        <button class="dur-btn" onclick="selectDur(this,'90 min')">90 min</button>
+      </div>
+      <div class="form-group" style="margin-top:16px">
+        <label class="form-label">¿Tienes alguna lesión hoy? (opcional)</label>
+        <input class="form-input" id="ia-lesion" placeholder="Ej: dolor de rodilla..."/>
+      </div>
+    </div>
+    <div class="ai-generating" id="ia-generating">
+      <div class="spinner"></div>
+      <div style="font-weight:700;margin-bottom:.5rem">Generando tu rutina...</div>
+      <div style="font-size:13px;color:var(--text2)">La IA está creando una rutina personalizada para ti</div>
+    </div>
+    <div class="modal-footer" id="ia-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-ia')">Cancelar</button>
+      <button class="btn btn-ai" onclick="generarConIA()">✨ Generar rutina</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="/js/auth.js"></script>
+<script src="/js/api.js"></script>
+<script>
+  const user = getUser();
+  if (!user) { window.location.href = '/login.html'; }
+  document.getElementById('nav-name').textContent = user.nombre || 'Usuario';
+  document.getElementById('nav-avatar').textContent = (user.nombre||'U')[0].toUpperCase();
+
+  let rutinas = [];
+  let currentTab = 'todas';
+  let ejCounter = 0;
+  let nivelIA = 'Principiante';
+  let durIA = '45 min';
+  const musculos = new Set();
+
+  async function init() {
+    try {
+      rutinas = await fetch(`/api/rutinas/usuario/${user.id}`).then(r => r.json());
+    } catch(e) { rutinas = []; }
+    renderRutinas();
+  }
+  init();
+  document.getElementById('r-fecha').value = new Date().toISOString().split('T')[0];
+
+  function renderRutinas() {
+    const grid = document.getElementById('rutinas-grid');
+    const empty = document.getElementById('empty-state');
+    grid.querySelectorAll('.rutina-card').forEach(c => c.remove());
+    let filtered = rutinas;
+    if (currentTab === 'pendientes') filtered = rutinas.filter(r => !r.completada);
+    if (currentTab === 'completadas') filtered = rutinas.filter(r => r.completada);
+    if (filtered.length === 0) { empty.style.display = 'block'; return; }
+    empty.style.display = 'none';
+    filtered.forEach(r => {
+      const card = document.createElement('div');
+      card.className = 'rutina-card' + (r.completada ? ' completada' : '');
+      card.style.cursor = 'pointer';
+      card.addEventListener('click', (e) => {
+        if (e.target.closest('button')) return;
+        openDetalle(r.id);
+      });      const ejs = r.ejercicios || [];
+      const shown = ejs.slice(0,3);
+      const more = ejs.length - 3;
+      const isIA = r.descripcion && r.descripcion.startsWith('[IA]');
+      card.innerHTML = `
+        <div class="rutina-card-header">
+          <div>
+            <div class="rutina-card-title">${r.nombre}</div>
+            <div class="rutina-card-dia">${r.diaSemana||''} ${r.fecha ? '· '+r.fecha : ''}</div>
+          </div>
+          <div style="display:flex;gap:6px;align-items:center">
+            ${isIA ? '<span class="rutina-badge badge-ia">✨ IA</span>' : ''}
+            <span class="rutina-badge ${r.completada ? 'badge-completada':'badge-pendiente'}">
+              ${r.completada ? '✓ Hecha':'Pendiente'}
+            </span>
+          </div>
+        </div>
+        <div class="rutina-card-body">
+          ${shown.map(e=>`
+            <div class="ejercicio-item">
+              <div class="ejercicio-dot"></div>
+              <div class="ejercicio-name">${e.nombreEjercicio}</div>
+              <div class="ejercicio-meta">${e.series}×${e.repeticiones} ${e.descansoSegundos?'· '+e.descansoSegundos+'s':''}</div>
+            </div>`).join('')}
+          ${more > 0 ? `<div class="more-ejercicios">+ ${more} ejercicio${more>1?'s':''} más</div>` : ''}
+          ${ejs.length===0 ? '<div style="font-size:13px;color:var(--text3)">Sin ejercicios añadidos</div>' : ''}
+        </div>
+        <div class="rutina-card-footer">
+          <button class="btn btn-ghost btn-sm" onclick="toggleCompletada(${r.id},${r.completada})">
+            ${r.completada ? '↩ Marcar pendiente':'✓ Marcar hecha'}
+          </button>
+          <button class="btn btn-danger btn-sm" onclick="eliminarRutina(${r.id})">🗑</button>
+        </div>`;
+      grid.appendChild(card);
+    });
+  }
+
+  function setTab(tab, el) {
+    currentTab = tab;
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    renderRutinas();
+  }
+
+  function openModal(id) { document.getElementById(id).classList.add('open'); }
+  function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+  function openCreateModal() {
+    ejCounter = 0;
+    document.getElementById('ejercicios-list').innerHTML = '';
+    document.getElementById('r-nombre').value = '';
+    document.getElementById('r-dia').value = '';
+    document.getElementById('r-desc').value = '';
+    document.getElementById('r-fecha').value = new Date().toISOString().split('T')[0];
+    addEjercicioForm();
+    openModal('modal-crear');
+  }
+
+  function addEjercicioForm() {
+    ejCounter++;
+    const n = ejCounter;
+    const div = document.createElement('div');
+    div.className = 'ejercicio-form-item';
+    div.id = `ej-${n}`;
+    div.innerHTML = `
+      <div class="ejercicio-form-header">
+        <span class="ejercicio-num">Ejercicio ${n}</span>
+        <button class="btn-remove" onclick="removeEj(${n})">×</button>
+      </div>
+      <div class="form-group" style="margin-bottom:10px">
+        <input class="form-input" id="ej-nombre-${n}" placeholder="Nombre del ejercicio *"/>
+      </div>
+      <div class="form-row">
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">Series</label>
+          <input class="form-input" id="ej-series-${n}" type="number" min="1" value="3"/>
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">Reps</label>
+          <input class="form-input" id="ej-reps-${n}" type="number" min="1" value="10"/>
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">Descanso (s)</label>
+          <input class="form-input" id="ej-desc-${n}" type="number" min="0" value="60"/>
+        </div>
+      </div>`;
+    document.getElementById('ejercicios-list').appendChild(div);
+  }
+
+  function removeEj(n) {
+    const el = document.getElementById(`ej-${n}`);
+    if (el) el.remove();
+  }
+
+  async function guardarRutina(nombreOverride, ejerciciosOverride, descOverride, diaOverride) {
+    const nombre = nombreOverride || document.getElementById('r-nombre').value.trim();
+    if (!nombre) { showToast('El nombre es obligatorio','error'); return; }
+    const ejercicios = ejerciciosOverride || [];
+    if (!ejerciciosOverride) {
+      document.querySelectorAll('[id^="ej-nombre-"]').forEach(el => {
+        const n = el.id.split('-').pop();
+        const nom = el.value.trim();
+        if (!nom) return;
+        ejercicios.push({
+          nombreEjercicio: nom,
+          series: parseInt(document.getElementById(`ej-series-${n}`).value)||3,
+          repeticiones: parseInt(document.getElementById(`ej-reps-${n}`).value)||10,
+          descansoSegundos: parseInt(document.getElementById(`ej-desc-${n}`).value)||60,
+          notas: ''
+        });
+      });
+    }
+    const body = {
+      usuarioId: user.id,
+      nombre,
+      diaSemana: diaOverride || document.getElementById('r-dia').value || '',
+      fecha: document.getElementById('r-fecha')?.value || new Date().toISOString().split('T')[0],
+      completada: false,
+      descripcion: descOverride || document.getElementById('r-desc').value || '',
+      ejercicios
+    };
+    try {
+      const res = await fetch('/api/rutinas', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify(body)
+      });
+      if (!res.ok) throw new Error();
+      const nueva = await res.json();
+      rutinas.unshift(nueva);
+      renderRutinas();
+      closeModal('modal-crear');
+      closeModal('modal-ia');
+      showToast('Rutina guardada ✓','success');
+    } catch(e) {
+      showToast('Error al guardar la rutina','error');
+    }
+  }
+
+  async function toggleCompletada(id, actual) {
+    try {
+      const res = await fetch(`/api/rutinas/${id}/completar`, {
+        method:'PATCH',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({completada: !actual})
+      });
+      if (!res.ok) throw new Error();
+      const updated = await res.json();
+      rutinas = rutinas.map(r => r.id === id ? updated : r);
+      renderRutinas();
+      showToast(!actual ? 'Marcada como completada ✓' : 'Marcada como pendiente','success');
+    } catch(e) { showToast('Error al actualizar','error'); }
+  }
+
+  function eliminarRutina(id) {
+    openModal('modal-confirm');
+    document.getElementById('confirm-delete-btn').onclick = async () => {
+      closeModal('modal-confirm');
+      try {
+        await fetch(`/api/rutinas/${id}`, {method:'DELETE'});
+        rutinas = rutinas.filter(r => r.id !== id);
+        renderRutinas();
+        showToast('Rutina eliminada','success');
+      } catch(e) { showToast('Error al eliminar','error'); }
+    };
+  }
+
+  function openAIModal() {
+    musculos.clear();
+    document.querySelectorAll('.muscle-chip').forEach(c => c.classList.remove('selected'));
+    document.getElementById('ia-lesion').value = '';
+    document.getElementById('ia-form-body').style.display = 'block';
+    document.getElementById('ia-generating').style.display = 'none';
+    document.getElementById('ia-footer').style.display = 'flex';
+    openModal('modal-ia');
+  }
+
+  function toggleMuscle(el, name) {
+    el.classList.toggle('selected');
+    musculos.has(name) ? musculos.delete(name) : musculos.add(name);
+  }
+
+  function selectNivel(el, val) {
+    nivelIA = val;
+    document.querySelectorAll('.nivel-btn').forEach(b => b.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+
+  function selectDur(el, val) {
+    durIA = val;
+    document.querySelectorAll('.dur-btn').forEach(b => b.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+
+  async function generarConIA() {
+    if (musculos.size === 0) { showToast('Selecciona al menos un grupo muscular','error'); return; }
+    document.getElementById('ia-form-body').style.display = 'none';
+    document.getElementById('ia-generating').style.display = 'block';
+    document.getElementById('ia-footer').style.display = 'none';
+
+    const lesion = document.getElementById('ia-lesion').value.trim();
+    const musculosStr = [...musculos].join(', ');
+    const perfil = `Objetivo: ${user.objetivo||'general'}, Peso: ${user.peso||'?'}kg, Lesiones previas: ${(user.lesiones||[]).join(', ')||'ninguna'}`;
+
+    const prompt = `Eres un entrenador personal experto. Crea una rutina de entrenamiento en formato JSON estricto.
+  Perfil del usuario: ${perfil}
+  Grupos musculares: ${musculosStr}
+  Nivel: ${nivelIA}
+  Duración: ${durIA}
+  ${lesion? 'Consideración especial: '+lesion: ''}
+  Responde SOLO con este JSON, sin texto adicional:
+  {"nombre":"nombre creativo","descripcion":"[IA] descripción breve","ejercicios":[{"nombreEjercicio":"...","series":3,"repeticiones":12,"descansoSegundos":60}]}
+  Incluye entre 5 y 8 ejercicios. Si hay lesión, evita ejercicios que la agraven.`;
+
+    try {
+      const res = await fetch('/api/rutinas/generar-ia', {
+  method:'POST',
+  headers:{'Content-Type':'application/json'},
+  body: JSON.stringify({ prompt })
+});
+const data = await res.json();
+const text = data.choices?.[0]?.message?.content || '';
+      const clean = text.replace(/```json|```/g,'').trim();
+      const rutina = JSON.parse(clean);
+      await guardarRutina(rutina.nombre, rutina.ejercicios, rutina.descripcion, [...musculos].join(' + '));
+    } catch(e) {
+      document.getElementById('ia-form-body').style.display = 'block';
+      document.getElementById('ia-generating').style.display = 'none';
+      document.getElementById('ia-footer').style.display = 'flex';
+      showToast('Error al generar con IA','error');
+    }
+  }
+
+  function showToast(msg, type='success') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = `toast ${type} show`;
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  document.querySelectorAll('.modal-overlay').forEach(o => {
+    o.addEventListener('click', e => { if (e.target === o) o.classList.remove('open'); });
+  });
+
+  function openDetalle(id) {
+  const r = rutinas.find(x => x.id === id);
+  if (!r) return;
+  document.getElementById('det-nombre').textContent = r.nombre;
+  document.getElementById('det-dia').textContent = (r.diaSemana || '') + (r.fecha ? ' · ' + r.fecha : '');
+
+  const badges = document.getElementById('det-badges');
+  const isIA = r.descripcion && r.descripcion.startsWith('[IA]');
+  badges.innerHTML = `
+    ${isIA ? '<span class="rutina-badge badge-ia">✨ Generada con IA</span>' : ''}
+    <span class="rutina-badge ${r.completada ? 'badge-completada' : 'badge-pendiente'}">
+      ${r.completada ? '✓ Completada' : 'Pendiente'}
+    </span>`;
+
+  const desc = document.getElementById('det-desc');
+  desc.textContent = r.descripcion && !r.descripcion.startsWith('[IA]') ? r.descripcion : '';
+
+  const ejs = document.getElementById('det-ejercicios');
+  ejs.innerHTML = (r.ejercicios || []).map((e, i) => `
+    <div style="display:flex;align-items:center;gap:12px;padding:12px;background:var(--bg3);border-radius:var(--radius2);margin-bottom:8px">
+      <div style="width:28px;height:28px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0">${i+1}</div>
+      <div style="flex:1">
+        <div style="font-size:14px;font-weight:600">${e.nombreEjercicio}</div>
+        <div style="font-size:12px;color:var(--text2);margin-top:2px">${e.series} series × ${e.repeticiones} reps ${e.descansoSegundos ? '· ' + e.descansoSegundos + 's descanso' : ''}</div>
+      </div>
+    </div>`).join('');
+
+  const btn = document.getElementById('det-completar-btn');
+  btn.textContent = r.completada ? '↩ Marcar pendiente' : '✓ Marcar hecha';
+  btn.onclick = () => { closeModal('modal-detalle'); toggleCompletada(r.id, r.completada); };
+
+  openModal('modal-detalle');
+}
+</script>
+
+<!-- MODAL CONFIRMAR ELIMINAR -->
+<div class="modal-overlay" id="modal-confirm">
+  <div class="modal" style="max-width:400px">
+    <div class="modal-header">
+      <div class="modal-title">Eliminar rutina</div>
+      <button class="modal-close" onclick="closeModal('modal-confirm')">×</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:14px;color:var(--text2)">¿Estás seguro de que quieres eliminar esta rutina? Esta acción no se puede deshacer.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-confirm')">Cancelar</button>
+      <button class="btn btn-danger" id="confirm-delete-btn" style="background:#ef4444;color:#fff;border:none">Eliminar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DETALLE RUTINA -->
+<div class="modal-overlay" id="modal-detalle">
+  <div class="modal" style="max-width:580px">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="det-nombre"></div>
+        <div style="font-size:12px;color:var(--accent);font-weight:600;margin-top:2px" id="det-dia"></div>
+      </div>
+      <button class="modal-close" onclick="closeModal('modal-detalle')">×</button>
+    </div>
+    <div class="modal-body">
+      <div id="det-badges" style="display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap"></div>
+      <div id="det-desc" style="font-size:13px;color:var(--text2);margin-bottom:16px"></div>
+      <div class="section-label">Ejercicios</div>
+      <div id="det-ejercicios"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-detalle')">Cerrar</button>
+      <button class="btn btn-primary" id="det-completar-btn">✓ Marcar hecha</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>
