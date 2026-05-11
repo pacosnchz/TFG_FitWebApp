@@ -23,7 +23,8 @@
         .obj-card{border:1px solid var(--border2);border-radius:var(--radius);padding:14px;cursor:pointer;transition:.2s;text-align:center}
         .obj-card:hover{border-color:var(--accent)}
         .obj-card.selected{border-color:var(--accent);background:rgba(224,123,34,.1)}
-        .obj-card .oc-icon{font-size:26px;margin-bottom:6px}
+        .obj-card .oc-icon{width:36px;height:36px;background:rgba(224,123,34,.12);border-radius:var(--radius2);display:flex;align-items:center;justify-content:center;margin:0 auto 8px}
+        .obj-card .oc-icon svg{width:18px;height:18px;stroke:var(--accent);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
         .obj-card p{font-size:13px;font-weight:600}
         .obj-card small{color:var(--text2);font-size:11px}
         .lesion-checks{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}
@@ -39,28 +40,28 @@
     <div class="logo-top">Fit<span>Web</span></div>
 
     <div class="auth-tabs">
-        <button class="auth-tab active" id="tab-login" onclick="switchTab('login')">Iniciar sesión</button>
+        <button class="auth-tab active" id="tab-login" onclick="switchTab('login')">Iniciar sesion</button>
         <button class="auth-tab" id="tab-register" onclick="switchTab('register')">Registrarse</button>
     </div>
 
-    <!-- ── LOGIN ── -->
+    <!-- LOGIN -->
     <div id="form-login">
         <h2>Bienvenido de nuevo</h2>
         <p class="sub">Accede a tu panel de entrenamiento</p>
         <div id="login-error" class="error-msg hidden"></div>
         <div class="form-group">
-            <label>Correo electrónico</label>
+            <label>Correo electronico</label>
             <input type="email" id="li-email" placeholder="tucorreo@email.com"/>
         </div>
         <div class="form-group">
-            <label>Contraseña</label>
+            <label>Contrasena</label>
             <input type="password" id="li-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"/>
         </div>
         <button class="btn-full btn-accent" onclick="doLogin()">Entrar</button>
-        <a href="/index.html" class="back-link">← Volver a inicio</a>
+        <a href="/index.html" class="back-link">Volver a inicio</a>
     </div>
 
-    <!-- ── REGISTRO ── -->
+    <!-- REGISTRO -->
     <div id="form-register" class="hidden">
         <div class="step-bar">
             <div class="step-dot done" id="sd1"></div>
@@ -68,29 +69,27 @@
             <div class="step-dot" id="sd3"></div>
         </div>
 
-        <!-- Paso 1: Datos de acceso -->
         <div class="onboard-step active" id="step1">
             <h2>Crear cuenta</h2>
             <p class="sub">Datos de acceso</p>
             <div id="register-error" class="error-msg hidden"></div>
             <div class="form-group">
                 <label>Nombre completo</label>
-                <input type="text" id="r-name" placeholder="Francisco Sánchez"/>
+                <input type="text" id="r-name" placeholder="Francisco Sanchez"/>
             </div>
             <div class="form-group">
-                <label>Correo electrónico</label>
+                <label>Correo electronico</label>
                 <input type="email" id="r-email" placeholder="tucorreo@email.com"/>
             </div>
             <div class="form-group">
-                <label>Contraseña</label>
-                <input type="password" id="r-pass" placeholder="Mínimo 6 caracteres"/>
+                <label>Contrasena</label>
+                <input type="password" id="r-pass" placeholder="Minimo 6 caracteres"/>
             </div>
-            <button class="btn-full btn-accent" onclick="nextStep(2)">Continuar →</button>
+            <button class="btn-full btn-accent" onclick="nextStep(2)">Continuar</button>
         </div>
 
-        <!-- Paso 2: Perfil físico -->
         <div class="onboard-step" id="step2">
-            <h2>Tu perfil físico</h2>
+            <h2>Tu perfil fisico</h2>
             <p class="sub">Personalizamos tu experiencia con estos datos</p>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
                 <div class="form-group">
@@ -98,12 +97,10 @@
                     <input type="number" id="r-age" placeholder="25" min="14" max="99"/>
                 </div>
                 <div class="form-group">
-                    <label>Género</label>
+                    <label>Genero</label>
                     <select id="r-gender">
                         <option value="">Seleccionar</option>
-                        <option>Hombre</option>
-                        <option>Mujer</option>
-                        <option>Otro</option>
+                        <option>Hombre</option><option>Mujer</option><option>Otro</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -118,42 +115,53 @@
             <div class="form-group">
                 <label>Objetivo principal</label>
                 <div class="objetivo-grid">
-                    <div class="obj-card" onclick="selectObj(this,'Perder peso')"><div class="oc-icon">🔥</div><p>Perder peso</p><small>Déficit calórico</small></div>
-                    <div class="obj-card" onclick="selectObj(this,'Ganar músculo')"><div class="oc-icon">💪</div><p>Ganar músculo</p><small>Hipertrofia</small></div>
-                    <div class="obj-card" onclick="selectObj(this,'Ganar peso')"><div class="oc-icon">🍽️</div><p>Ganar peso</p><small>Superávit calórico</small></div>
-                    <div class="obj-card" onclick="selectObj(this,'Mantenimiento')"><div class="oc-icon">⚖️</div><p>Mantenimiento</p><small>Balance</small></div>
+                    <div class="obj-card" onclick="selectObj(this,'Perder peso')">
+                        <div class="oc-icon"><svg viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+                        <p>Perder peso</p><small>Deficit calorico</small>
+                    </div>
+                    <div class="obj-card" onclick="selectObj(this,'Ganar musculo')">
+                        <div class="oc-icon"><svg viewBox="0 0 24 24"><path d="M6 4v16M18 4v16M3 8h3M18 8h3M3 16h3M18 16h3M6 12h12"/></svg></div>
+                        <p>Ganar musculo</p><small>Hipertrofia</small>
+                    </div>
+                    <div class="obj-card" onclick="selectObj(this,'Ganar peso')">
+                        <div class="oc-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+                        <p>Ganar peso</p><small>Superavit calorico</small>
+                    </div>
+                    <div class="obj-card" onclick="selectObj(this,'Mantenimiento')">
+                        <div class="oc-icon"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+                        <p>Mantenimiento</p><small>Balance</small>
+                    </div>
                 </div>
             </div>
             <div style="display:flex;gap:8px;margin-top:1rem">
-                <button class="btn-ghost btn-full" onclick="nextStep(1)">← Atrás</button>
-                <button class="btn-full btn-accent" onclick="nextStep(3)">Continuar →</button>
+                <button class="btn-ghost btn-full" onclick="nextStep(1)">Atras</button>
+                <button class="btn-full btn-accent" onclick="nextStep(3)">Continuar</button>
             </div>
         </div>
 
-        <!-- Paso 3: Lesiones -->
         <div class="onboard-step" id="step3">
             <h2>Historial de lesiones</h2>
-            <p class="sub">Adaptamos los ejercicios a tu condición física</p>
+            <p class="sub">Adaptamos los ejercicios a tu condicion fisica</p>
             <div class="form-group">
-                <label>¿Tienes alguna lesión o limitación?</label>
+                <label>Tienes alguna lesion o limitacion?</label>
                 <div class="lesion-checks">
                     <label class="lesion-check"><input type="checkbox" id="l-hombro"> Hombro</label>
                     <label class="lesion-check"><input type="checkbox" id="l-rodilla"> Rodilla</label>
                     <label class="lesion-check"><input type="checkbox" id="l-lumbar"> Lumbar</label>
                     <label class="lesion-check"><input type="checkbox" id="l-cuello"> Cuello</label>
                     <label class="lesion-check"><input type="checkbox" id="l-tobillo"> Tobillo</label>
-                    <label class="lesion-check"><input type="checkbox" id="l-muneca"> Muñeca</label>
+                    <label class="lesion-check"><input type="checkbox" id="l-muneca"> Muneca</label>
                     <label class="lesion-check"><input type="checkbox" id="l-cadera"> Cadera</label>
                     <label class="lesion-check"><input type="checkbox" id="l-codo"> Codo</label>
                 </div>
             </div>
             <div class="form-group">
                 <label>Observaciones adicionales (opcional)</label>
-                <textarea id="r-lesion-notes" rows="2" placeholder="Ej: Operación de menisco en 2022..." style="resize:none"></textarea>
+                <textarea id="r-lesion-notes" rows="2" placeholder="Ej: Operacion de menisco en 2022..." style="resize:none"></textarea>
             </div>
             <div style="display:flex;gap:8px;margin-top:1rem">
-                <button class="btn-ghost btn-full" onclick="nextStep(2)">← Atrás</button>
-                <button class="btn-full btn-accent" onclick="doRegister()">Crear cuenta ✓</button>
+                <button class="btn-ghost btn-full" onclick="nextStep(2)">Atras</button>
+                <button class="btn-full btn-accent" onclick="doRegister()">Crear cuenta</button>
             </div>
         </div>
     </div>
@@ -162,87 +170,88 @@
 <script src="/js/auth.js"></script>
 <script src="/js/api.js"></script>
 <script>
-    // Redirige si ya hay sesión activa
     if (getUser()) window.location.href = '/menu.html';
 
     let selObjective = '';
 
+    // Abrir tab de registro si viene ?tab=register
+    if (new URLSearchParams(window.location.search).get('tab') === 'register') switchTab('register');
+
     function switchTab(tab) {
-      document.getElementById('tab-login').classList.toggle('active', tab === 'login');
-      document.getElementById('tab-register').classList.toggle('active', tab === 'register');
-      document.getElementById('form-login').classList.toggle('hidden', tab !== 'login');
-      document.getElementById('form-register').classList.toggle('hidden', tab !== 'register');
+        document.getElementById('tab-login').classList.toggle('active', tab === 'login');
+        document.getElementById('tab-register').classList.toggle('active', tab === 'register');
+        document.getElementById('form-login').classList.toggle('hidden', tab !== 'login');
+        document.getElementById('form-register').classList.toggle('hidden', tab !== 'register');
     }
 
     function nextStep(n) {
-      document.querySelectorAll('.onboard-step').forEach(s => s.classList.remove('active'));
-      document.getElementById('step' + n).classList.add('active');
-      for (let i = 1; i <= 3; i++)
-        document.getElementById('sd' + i).classList.toggle('done', i <= n);
+        document.querySelectorAll('.onboard-step').forEach(s => s.classList.remove('active'));
+        document.getElementById('step' + n).classList.add('active');
+        for (let i = 1; i <= 3; i++)
+            document.getElementById('sd' + i).classList.toggle('done', i <= n);
     }
 
     function selectObj(el, val) {
-      document.querySelectorAll('.obj-card').forEach(c => c.classList.remove('selected'));
-      el.classList.add('selected');
-      selObjective = val;
+        document.querySelectorAll('.obj-card').forEach(c => c.classList.remove('selected'));
+        el.classList.add('selected');
+        selObjective = val;
     }
 
     function showError(id, msg) {
-      const el = document.getElementById(id);
-      el.textContent = msg;
-      el.classList.remove('hidden');
+        const el = document.getElementById(id);
+        el.textContent = msg;
+        el.classList.remove('hidden');
     }
 
     async function doLogin() {
-      const email    = document.getElementById('li-email').value.trim();
-      const password = document.getElementById('li-pass').value;
-      if (!email || !password) { showError('login-error', 'Rellena todos los campos.'); return; }
-      try {
-        const user = await apiLogin(email, password);
-        saveUser(user);
-        window.location.href = '/menu.html';
-      } catch (e) {
-        showError('login-error', 'Email o contraseña incorrectos.');
-      }
+        const email = document.getElementById('li-email').value.trim();
+        const password = document.getElementById('li-pass').value;
+        if (!email || !password) { showError('login-error', 'Rellena todos los campos.'); return; }
+        try {
+            const user = await apiLogin(email, password);
+            saveUser(user);
+            window.location.href = '/menu.html';
+        } catch(e) {
+            showError('login-error', 'Email o contrasena incorrectos.');
+        }
     }
 
     async function doRegister() {
-      const lesionMap = {
-        Hombro:'l-hombro', Rodilla:'l-rodilla', Lumbar:'l-lumbar',
-        Cuello:'l-cuello', Tobillo:'l-tobillo', Muñeca:'l-muneca',
-        Cadera:'l-cadera', Codo:'l-codo'
-      };
-      const lesiones = Object.entries(lesionMap)
-        .filter(([, id]) => { const el = document.getElementById(id); return el && el.checked; })
-        .map(([name]) => name);
+        const lesionMap = {
+            Hombro:'l-hombro', Rodilla:'l-rodilla', Lumbar:'l-lumbar',
+            Cuello:'l-cuello', Tobillo:'l-tobillo', Muneca:'l-muneca',
+            Cadera:'l-cadera', Codo:'l-codo'
+        };
+        const lesiones = Object.entries(lesionMap)
+            .filter(([, id]) => { const el = document.getElementById(id); return el && el.checked; })
+            .map(([name]) => name);
 
-      const datos = {
-        nombre:      document.getElementById('r-name').value.trim(),
-        email:       document.getElementById('r-email').value.trim(),
-        password:    document.getElementById('r-pass').value,
-        edad:        parseInt(document.getElementById('r-age').value) || 25,
-        genero:      document.getElementById('r-gender').value || 'Hombre',
-        peso:        parseFloat(document.getElementById('r-weight').value) || 70,
-        altura:      parseInt(document.getElementById('r-height').value) || 175,
-        objetivo:    selObjective || 'Mantenimiento',
-        lesiones,
-        lesionNotas: document.getElementById('r-lesion-notes').value
-      };
+        const datos = {
+            nombre:      document.getElementById('r-name').value.trim(),
+            email:       document.getElementById('r-email').value.trim(),
+            password:    document.getElementById('r-pass').value,
+            edad:        parseInt(document.getElementById('r-age').value) || 25,
+            genero:      document.getElementById('r-gender').value || 'Hombre',
+            peso:        parseFloat(document.getElementById('r-weight').value) || 70,
+            altura:      parseInt(document.getElementById('r-height').value) || 175,
+            objetivo:    selObjective || 'Mantenimiento',
+            lesiones,
+            lesionNotas: document.getElementById('r-lesion-notes').value
+        };
 
-      if (!datos.nombre || !datos.email || !datos.password) {
-        showError('register-error', 'Rellena nombre, email y contraseña.');
-        nextStep(1);
-        return;
-      }
+        if (!datos.nombre || !datos.email || !datos.password) {
+            showError('register-error', 'Rellena nombre, email y contrasena.');
+            nextStep(1); return;
+        }
 
-      try {
-        const user = await apiRegistro(datos);
-        saveUser(user);
-        window.location.href = '/menu.html';
-      } catch (e) {
-        showError('register-error', e.message || 'Error al registrarse.');
-        nextStep(1);
-      }
+        try {
+            const user = await apiRegistro(datos);
+            saveUser(user);
+            window.location.href = '/menu.html';
+        } catch(e) {
+            showError('register-error', e.message || 'Error al registrarse.');
+            nextStep(1);
+        }
     }
 </script>
 </body>

@@ -3,59 +3,32 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <title>FitWeb — Mis Récords</title>
+    <title>FitWeb — Mis Records</title>
     <link rel="stylesheet" href="/css/styles.css"/>
-    <style>
-        body{padding-top:56px}
-    </style>
 </head>
 <body>
 
-<!-- TOPBAR -->
-<div id="topbar">
-    <a href="/index.html" class="logo">Fit<span>Web</span></a>
-    <nav>
-        <a href="/menu.html">Dashboard</a>
-        <a href="/ejercicios.html">Ejercicios</a>
-        <a href="/rutinas.html">Rutinas</a>
-        <a href="/records.html" class="active">Mis récords</a>
-        <a href="/chatbot.html">Entrenador IA</a>
-        <a href="/perfil.html">Perfil</a>
-    </nav>
-    <div class="topbar-right">
-        <a href="/perfil.html" class="avatar" id="user-avatar">?</a>
-        <button class="logout-btn" onclick="doLogout()">Salir</button>
-    </div>
-</div>
-
 <div class="page-content">
     <div class="records-header">
-        <div class="section-title" style="margin:0">Mis récords personales (PR)</div>
-        <button class="btn-sm" onclick="openModal()">+ Añadir récord</button>
+        <div class="section-title" style="margin:0">Mis records personales (PR)</div>
+        <button class="btn-sm" onclick="openModal()">+ Añadir record</button>
     </div>
-
     <div class="card">
         <table class="records-table">
             <thead>
             <tr>
-                <th>Ejercicio</th>
-                <th>Peso máx.</th>
-                <th>Reps</th>
-                <th>Fecha</th>
-                <th></th>
+                <th>Ejercicio</th><th>Peso max.</th><th>Reps</th><th>Fecha</th><th></th>
             </tr>
             </thead>
             <tbody id="records-body"></tbody>
         </table>
         <div id="records-empty" style="text-align:center;padding:2rem;color:var(--text3)">
-            Aún no tienes récords guardados. ¡Añade tu primero!
+            Aun no tienes records guardados.
         </div>
     </div>
-
-    <!-- ESTADÍSTICAS -->
-    <div class="stats-grid" style="margin-top:1.2rem" id="stats-section">
+    <div class="stats-grid" style="margin-top:1.2rem">
         <div class="stat-card">
-            <div class="sc-label">Total de récords</div>
+            <div class="sc-label">Total de records</div>
             <div class="sc-val sc-accent" id="stat-total">0</div>
         </div>
         <div class="stat-card">
@@ -64,28 +37,27 @@
             <div class="sc-sub" id="stat-maxpeso-ej">—</div>
         </div>
         <div class="stat-card">
-            <div class="sc-label">Máx. repeticiones</div>
+            <div class="sc-label">Max. repeticiones</div>
             <div class="sc-val" id="stat-maxreps">—</div>
             <div class="sc-sub" id="stat-maxreps-ej">—</div>
         </div>
         <div class="stat-card">
-            <div class="sc-label">Último registro</div>
+            <div class="sc-label">Ultimo registro</div>
             <div class="sc-val" id="stat-ultimo" style="font-size:16px">—</div>
         </div>
     </div>
 </div>
 
-<!-- MODAL AÑADIR RÉCORD -->
 <div class="modal-overlay hidden" id="record-modal" onclick="handleOverlayClick(event)">
     <div class="modal">
-        <h3>Añadir récord personal</h3>
+        <h3>Añadir record personal</h3>
         <div class="form-group">
             <label>Ejercicio</label>
             <input type="text" id="rec-ejercicio" placeholder="Ej: Sentadilla"/>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
             <div class="form-group">
-                <label>Peso máximo (kg)</label>
+                <label>Peso maximo (kg)</label>
                 <input type="number" id="rec-peso" placeholder="100" min="0"/>
             </div>
             <div class="form-group">
@@ -103,103 +75,81 @@
 
 <script src="/js/auth.js"></script>
 <script src="/js/api.js"></script>
+<script src="/js/nav.js"></script>
+<script>
+    renderNav('records');
+</script>
 <script>
     const user = requireAuth();
+    document.getElementById('topbar-username').textContent = user.nombre.split(' ')[0];
     document.getElementById('user-avatar').textContent = getInitials(user.nombre);
 
     async function loadRecords() {
-      try {
-        const data = await apiGetRecords(user.id);
-        renderRecords(data);
-        renderStats(data);
-      } catch(e) {
-        console.error('Error cargando récords', e);
-      }
+        try {
+            const data = await apiGetRecords(user.id);
+            renderRecords(data);
+            renderStats(data);
+        } catch(e) { console.error(e); }
     }
 
     function renderRecords(data) {
-      const tbody = document.getElementById('records-body');
-      const empty = document.getElementById('records-empty');
-      if (!data.length) {
-        tbody.innerHTML = '';
-        empty.style.display = 'block';
-        return;
-      }
-      empty.style.display = 'none';
-      tbody.innerHTML = data.map(r => `
-        <tr>
-          <td>${r.ejercicio}<span class="pr-badge">PR</span></td>
-          <td><strong>${r.pesoMaximo} kg</strong></td>
-          <td>${r.repeticiones} reps</td>
-          <td style="color:var(--text2)">${r.fecha}</td>
-          <td>
-            <button onclick="deleteRecord(${r.id})"
-              style="background:none;border:none;color:var(--red);font-size:18px;cursor:pointer"
-              title="Eliminar">×</button>
-          </td>
-        </tr>`).join('');
+        const tbody = document.getElementById('records-body');
+        const empty = document.getElementById('records-empty');
+        if (!data.length) { tbody.innerHTML = ''; empty.style.display = 'block'; return; }
+        empty.style.display = 'none';
+        tbody.innerHTML = data.map(r => `
+            <tr>
+                <td>${r.ejercicio}<span class="pr-badge">PR</span></td>
+                <td><strong>${r.pesoMaximo} kg</strong></td>
+                <td>${r.repeticiones} reps</td>
+                <td style="color:var(--text2)">${r.fecha}</td>
+                <td>
+                    <button onclick="deleteRecord(${r.id})" style="background:none;border:none;color:var(--red);cursor:pointer;padding:4px" title="Eliminar">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+                    </button>
+                </td>
+            </tr>`).join('');
     }
 
     function renderStats(data) {
-      document.getElementById('stat-total').textContent = data.length;
-      if (!data.length) return;
-      const maxPeso = data.reduce((a, b) => a.pesoMaximo > b.pesoMaximo ? a : b);
-      const maxReps = data.reduce((a, b) => a.repeticiones > b.repeticiones ? a : b);
-      const ultimo  = data[data.length - 1];
-      document.getElementById('stat-maxpeso').textContent    = maxPeso.pesoMaximo + ' kg';
-      document.getElementById('stat-maxpeso-ej').textContent = maxPeso.ejercicio;
-      document.getElementById('stat-maxreps').textContent    = maxReps.repeticiones + ' reps';
-      document.getElementById('stat-maxreps-ej').textContent = maxReps.ejercicio;
-      document.getElementById('stat-ultimo').textContent     = ultimo.ejercicio + ' · ' + ultimo.fecha;
+        document.getElementById('stat-total').textContent = data.length;
+        if (!data.length) return;
+        const maxPeso = data.reduce((a, b) => a.pesoMaximo > b.pesoMaximo ? a : b);
+        const maxReps = data.reduce((a, b) => a.repeticiones > b.repeticiones ? a : b);
+        const ultimo = data[data.length - 1];
+        document.getElementById('stat-maxpeso').textContent = maxPeso.pesoMaximo + ' kg';
+        document.getElementById('stat-maxpeso-ej').textContent = maxPeso.ejercicio;
+        document.getElementById('stat-maxreps').textContent = maxReps.repeticiones + ' reps';
+        document.getElementById('stat-maxreps-ej').textContent = maxReps.ejercicio;
+        document.getElementById('stat-ultimo').textContent = ultimo.ejercicio + ' · ' + ultimo.fecha;
     }
 
     function openModal() {
-      document.getElementById('modal-error').classList.add('hidden');
-      document.getElementById('rec-ejercicio').value = '';
-      document.getElementById('rec-peso').value = '';
-      document.getElementById('rec-reps').value = '';
-      document.getElementById('record-modal').classList.remove('hidden');
+        document.getElementById('modal-error').classList.add('hidden');
+        document.getElementById('rec-ejercicio').value = '';
+        document.getElementById('rec-peso').value = '';
+        document.getElementById('rec-reps').value = '';
+        document.getElementById('record-modal').classList.remove('hidden');
     }
 
-    function closeModal() {
-      document.getElementById('record-modal').classList.add('hidden');
-    }
-
-    function handleOverlayClick(e) {
-      if (e.target === document.getElementById('record-modal')) closeModal();
-    }
+    function closeModal() { document.getElementById('record-modal').classList.add('hidden'); }
+    function handleOverlayClick(e) { if (e.target === document.getElementById('record-modal')) closeModal(); }
 
     async function saveRecord() {
-      const ej = document.getElementById('rec-ejercicio').value.trim();
-      const pe = parseFloat(document.getElementById('rec-peso').value);
-      const re = parseInt(document.getElementById('rec-reps').value);
-      const errEl = document.getElementById('modal-error');
-
-      if (!ej || isNaN(pe) || isNaN(re)) {
-        errEl.textContent = 'Rellena todos los campos correctamente.';
-        errEl.classList.remove('hidden');
-        return;
-      }
-      errEl.classList.add('hidden');
-
-      try {
-        await apiCrearRecord(user.id, ej, pe, re);
-        closeModal();
-        await loadRecords();
-      } catch(e) {
-        errEl.textContent = 'Error al guardar el récord.';
-        errEl.classList.remove('hidden');
-      }
+        const ej = document.getElementById('rec-ejercicio').value.trim();
+        const pe = parseFloat(document.getElementById('rec-peso').value);
+        const re = parseInt(document.getElementById('rec-reps').value);
+        const errEl = document.getElementById('modal-error');
+        if (!ej || isNaN(pe) || isNaN(re)) { errEl.textContent = 'Rellena todos los campos correctamente.'; errEl.classList.remove('hidden'); return; }
+        errEl.classList.add('hidden');
+        try { await apiCrearRecord(user.id, ej, pe, re); closeModal(); await loadRecords(); }
+        catch(e) { errEl.textContent = 'Error al guardar el record.'; errEl.classList.remove('hidden'); }
     }
 
     async function deleteRecord(id) {
-      if (!confirm('¿Eliminar este récord?')) return;
-      try {
-        await apiEliminarRecord(id);
-        await loadRecords();
-      } catch(e) {
-        console.error('Error eliminando récord', e);
-      }
+        if (!confirm('Eliminar este record?')) return;
+        try { await apiEliminarRecord(id); await loadRecords(); }
+        catch(e) { console.error(e); }
     }
 
     loadRecords();

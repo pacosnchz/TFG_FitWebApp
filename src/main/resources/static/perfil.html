@@ -6,7 +6,6 @@
     <title>FitWeb — Mi Perfil</title>
     <link rel="stylesheet" href="/css/styles.css"/>
     <style>
-        body{padding-top:56px}
         .edit-section{display:none}
         .edit-section.active{display:block}
         .lesion-checks{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}
@@ -16,26 +15,7 @@
 </head>
 <body>
 
-<!-- TOPBAR -->
-<div id="topbar">
-    <a href="/index.html" class="logo">Fit<span>Web</span></a>
-    <nav>
-        <a href="/menu.html">Dashboard</a>
-        <a href="/ejercicios.html">Ejercicios</a>
-        <a href="/rutinas.html">Rutinas</a>
-        <a href="/records.html">Mis récords</a>
-        <a href="/chatbot.html">Entrenador IA</a>
-        <a href="/perfil.html" class="active">Perfil</a>
-    </nav>
-    <div class="topbar-right">
-        <a href="/perfil.html" class="avatar" id="user-avatar">?</a>
-        <button class="logout-btn" onclick="doLogout()">Salir</button>
-    </div>
-</div>
-
 <div class="page-content">
-
-    <!-- CABECERA PERFIL -->
     <div class="profile-top">
         <div class="avatar-lg" id="profile-avatar">?</div>
         <div class="profile-info">
@@ -44,48 +24,39 @@
             <div class="obj-pill" id="profile-obj">—</div>
         </div>
         <div style="margin-left:auto;display:flex;gap:8px">
-            <button class="btn-sm" onclick="toggleEdit()">✏️ Editar perfil</button>
-            <button class="btn-sm" style="background:var(--bg3);color:var(--red);border:1px solid rgba(226,75,74,.3)"
-                    onclick="doLogout()">Cerrar sesión</button>
+            <button class="btn-sm" onclick="toggleEdit()">Editar perfil</button>
+            <button class="btn-sm" style="background:var(--bg3);color:var(--red);border:1px solid rgba(226,75,74,.3)" onclick="doLogout()">Cerrar sesion</button>
         </div>
     </div>
 
-    <!-- VISTA DATOS (solo lectura) -->
     <div id="view-section">
         <div class="profile-grid">
             <div class="card">
-                <div class="card-title">Datos físicos</div>
+                <div class="card-title">Datos fisicos</div>
                 <div id="profile-data-rows"></div>
             </div>
-
             <div class="card">
-                <div class="card-title">Índice de Masa Corporal</div>
+                <div class="card-title">Indice de Masa Corporal</div>
                 <div class="imc-display">
                     <div class="imc-val" id="profile-imc">—</div>
                     <div class="imc-label" id="profile-imc-label">—</div>
-                    <div class="imc-bar">
-                        <div class="imc-marker" id="imc-marker" style="left:50%"></div>
-                    </div>
-                    <div class="imc-ticks">
-                        <span>Bajo</span><span>Normal</span><span>Sobrepeso</span><span>Obesidad</span>
-                    </div>
+                    <div class="imc-bar"><div class="imc-marker" id="imc-marker" style="left:50%"></div></div>
+                    <div class="imc-ticks"><span>Bajo</span><span>Normal</span><span>Sobrepeso</span><span>Obesidad</span></div>
                 </div>
             </div>
-
             <div class="card">
                 <div class="card-title">Lesiones / Limitaciones</div>
                 <div class="lesion-tags" id="profile-lesions"></div>
                 <div id="profile-lesion-notes" style="margin-top:.8rem;font-size:13px;color:var(--text2)"></div>
             </div>
-
             <div class="card">
-                <div class="card-title">Calorías y macros</div>
+                <div class="card-title">Calorias y macros</div>
                 <div style="text-align:center;padding:.5rem 0">
                     <div style="font-size:32px;font-weight:800;color:var(--accent)" id="profile-cals">—</div>
-                    <div style="font-size:12px;color:var(--text2)">kcal/día recomendadas</div>
+                    <div style="font-size:12px;color:var(--text2)">kcal/dia recomendadas</div>
                 </div>
                 <div class="mini-macro" style="margin-top:.8rem">
-                    <div class="mm"><p>Proteína</p><strong id="profile-prot" style="color:#378add">—</strong></div>
+                    <div class="mm"><p>Proteina</p><strong id="profile-prot" style="color:#378add">—</strong></div>
                     <div class="mm"><p>Carbos</p><strong id="profile-carbs" style="color:#8bc34a">—</strong></div>
                     <div class="mm"><p>Grasas</p><strong id="profile-fats" style="color:var(--accent)">—</strong></div>
                 </div>
@@ -93,13 +64,11 @@
         </div>
     </div>
 
-    <!-- FORMULARIO EDICIÓN -->
     <div id="edit-section" class="edit-section">
         <div class="card" style="max-width:600px">
             <div class="card-title">Editar perfil</div>
             <div id="edit-error" class="error-msg hidden"></div>
             <div id="edit-success" class="success-msg hidden"></div>
-
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
                 <div class="form-group" style="grid-column:1/-1">
                     <label>Nombre completo</label>
@@ -110,12 +79,8 @@
                     <input type="number" id="edit-edad" min="14" max="99"/>
                 </div>
                 <div class="form-group">
-                    <label>Género</label>
-                    <select id="edit-genero">
-                        <option>Hombre</option>
-                        <option>Mujer</option>
-                        <option>Otro</option>
-                    </select>
+                    <label>Genero</label>
+                    <select id="edit-genero"><option>Hombre</option><option>Mujer</option><option>Otro</option></select>
                 </div>
                 <div class="form-group">
                     <label>Peso (kg)</label>
@@ -128,14 +93,10 @@
                 <div class="form-group" style="grid-column:1/-1">
                     <label>Objetivo</label>
                     <select id="edit-objetivo">
-                        <option>Perder peso</option>
-                        <option>Ganar músculo</option>
-                        <option>Ganar peso</option>
-                        <option>Mantenimiento</option>
+                        <option>Perder peso</option><option>Ganar musculo</option><option>Ganar peso</option><option>Mantenimiento</option>
                     </select>
                 </div>
             </div>
-
             <div class="form-group">
                 <label>Lesiones / Limitaciones</label>
                 <div class="lesion-checks">
@@ -144,150 +105,136 @@
                     <label class="lesion-check"><input type="checkbox" id="e-lumbar"> Lumbar</label>
                     <label class="lesion-check"><input type="checkbox" id="e-cuello"> Cuello</label>
                     <label class="lesion-check"><input type="checkbox" id="e-tobillo"> Tobillo</label>
-                    <label class="lesion-check"><input type="checkbox" id="e-muneca"> Muñeca</label>
+                    <label class="lesion-check"><input type="checkbox" id="e-muneca"> Muneca</label>
                     <label class="lesion-check"><input type="checkbox" id="e-cadera"> Cadera</label>
                     <label class="lesion-check"><input type="checkbox" id="e-codo"> Codo</label>
                 </div>
             </div>
-
             <div class="form-group">
                 <label>Notas sobre lesiones (opcional)</label>
                 <textarea id="edit-lesion-notas" rows="2" style="resize:none"></textarea>
             </div>
-
             <div style="display:flex;gap:8px;margin-top:.5rem">
                 <button class="btn-ghost" onclick="toggleEdit()">Cancelar</button>
                 <button class="btn-sm" onclick="saveProfile()">Guardar cambios</button>
             </div>
         </div>
     </div>
-
 </div>
 
 <script src="/js/auth.js"></script>
 <script src="/js/api.js"></script>
+<script src="/js/nav.js"></script>
+<script>
+    renderNav('perfil');
+</script>
 <script>
     let user = requireAuth();
-
-    const objEmoji = {
-      'Perder peso':'🔥','Ganar músculo':'💪','Ganar peso':'🍽️','Mantenimiento':'⚖️'
-    };
+    document.getElementById('topbar-username').textContent = user.nombre.split(' ')[0];
+    document.getElementById('user-avatar').textContent = getInitials(user.nombre);
 
     const lesionMap = {
-      Hombro:'e-hombro', Rodilla:'e-rodilla', Lumbar:'e-lumbar',
-      Cuello:'e-cuello', Tobillo:'e-tobillo', Muñeca:'e-muneca',
-      Cadera:'e-cadera', Codo:'e-codo'
+        Hombro:'e-hombro', Rodilla:'e-rodilla', Lumbar:'e-lumbar',
+        Cuello:'e-cuello', Tobillo:'e-tobillo', Muneca:'e-muneca',
+        Cadera:'e-cadera', Codo:'e-codo'
     };
 
     function renderProfile() {
-      const ini  = getInitials(user.nombre);
-      const imc  = getIMC(user.peso, user.altura);
-      const cals = calsTDEE(user);
-      const prot = Math.round(user.peso * 2);
-      const fats = Math.round(cals * 0.25 / 9);
-      const carbs = Math.round((cals - prot * 4 - fats * 9) / 4);
+        const ini = getInitials(user.nombre);
+        const imc = getIMC(user.peso, user.altura);
+        const cals = calsTDEE(user);
+        const prot = Math.round(user.peso * 2);
+        const fats = Math.round(cals * 0.25 / 9);
+        const carbs = Math.round((cals - prot * 4 - fats * 9) / 4);
 
-      document.getElementById('user-avatar').textContent    = ini;
-      document.getElementById('profile-avatar').textContent = ini;
-      document.getElementById('profile-name').textContent   = user.nombre;
-      document.getElementById('profile-email').textContent  = user.email;
-      document.getElementById('profile-obj').textContent    = (objEmoji[user.objetivo]||'🎯') + ' ' + user.objetivo;
-      document.getElementById('profile-imc').textContent       = imc;
-      document.getElementById('profile-imc-label').textContent = imcLabel(imc);
-      document.getElementById('imc-marker').style.left         = imcPos(parseFloat(imc)) + '%';
-      document.getElementById('profile-cals').textContent  = cals.toLocaleString('es-ES');
-      document.getElementById('profile-prot').textContent  = prot + 'g';
-      document.getElementById('profile-carbs').textContent = carbs + 'g';
-      document.getElementById('profile-fats').textContent  = fats + 'g';
+        document.getElementById('topbar-username').textContent = user.nombre.split(' ')[0];
+        document.getElementById('user-avatar').textContent = ini;
+        document.getElementById('profile-avatar').textContent = ini;
+        document.getElementById('profile-name').textContent = user.nombre;
+        document.getElementById('profile-email').textContent = user.email;
+        document.getElementById('profile-obj').textContent = user.objetivo;
+        document.getElementById('profile-imc').textContent = imc;
+        document.getElementById('profile-imc-label').textContent = imcLabel(imc);
+        document.getElementById('imc-marker').style.left = imcPos(parseFloat(imc)) + '%';
+        document.getElementById('profile-cals').textContent = cals.toLocaleString('es-ES');
+        document.getElementById('profile-prot').textContent = prot + 'g';
+        document.getElementById('profile-carbs').textContent = carbs + 'g';
+        document.getElementById('profile-fats').textContent = fats + 'g';
 
-      const rows = [
-        ['Edad',    user.edad   + ' años'],
-        ['Género',  user.genero || '—'],
-        ['Peso',    user.peso   + ' kg'],
-        ['Altura',  user.altura + ' cm'],
-        ['Miembro desde', user.fechaRegistro ? user.fechaRegistro.split('T')[0] : '—']
-      ];
-      document.getElementById('profile-data-rows').innerHTML =
-        rows.map(([k,v]) => `<div class="info-row"><span>${k}</span><span>${v}</span></div>`).join('');
+        const rows = [
+            ['Edad', user.edad + ' años'],
+            ['Genero', user.genero || '—'],
+            ['Peso', user.peso + ' kg'],
+            ['Altura', user.altura + ' cm'],
+            ['Miembro desde', user.fechaRegistro ? user.fechaRegistro.split('T')[0] : '—']
+        ];
+        document.getElementById('profile-data-rows').innerHTML =
+            rows.map(([k,v]) => `<div class="info-row"><span>${k}</span><span>${v}</span></div>`).join('');
 
-      const lt = document.getElementById('profile-lesions');
-      lt.innerHTML = user.lesiones && user.lesiones.length
-        ? user.lesiones.map(l => `<span class="lesion-tag">${l}</span>`).join('')
-        : '<span style="color:var(--text3);font-size:13px">Sin lesiones indicadas</span>';
+        const lt = document.getElementById('profile-lesions');
+        lt.innerHTML = user.lesiones && user.lesiones.length
+            ? user.lesiones.map(l => `<span class="lesion-tag">${l}</span>`).join('')
+            : '<span style="color:var(--text3);font-size:13px">Sin lesiones indicadas</span>';
 
-      const notasEl = document.getElementById('profile-lesion-notes');
-      notasEl.textContent = user.lesionNotas ? '📝 ' + user.lesionNotas : '';
+        document.getElementById('profile-lesion-notes').textContent = user.lesionNotas || '';
     }
 
     function toggleEdit() {
-      const editSec = document.getElementById('edit-section');
-      const viewSec = document.getElementById('view-section');
-      const isEditing = editSec.classList.contains('active');
-
-      if (!isEditing) {
-        // Rellenar formulario con datos actuales
-        document.getElementById('edit-nombre').value   = user.nombre;
-        document.getElementById('edit-edad').value     = user.edad;
-        document.getElementById('edit-genero').value   = user.genero || 'Hombre';
-        document.getElementById('edit-peso').value     = user.peso;
-        document.getElementById('edit-altura').value   = user.altura;
-        document.getElementById('edit-objetivo').value = user.objetivo;
-        document.getElementById('edit-lesion-notas').value = user.lesionNotas || '';
-
-        // Marcar lesiones
-        Object.entries(lesionMap).forEach(([nombre, id]) => {
-          const el = document.getElementById(id);
-          if (el) el.checked = user.lesiones && user.lesiones.includes(nombre);
-        });
-
-        document.getElementById('edit-error').classList.add('hidden');
-        document.getElementById('edit-success').classList.add('hidden');
-      }
-
-      editSec.classList.toggle('active', !isEditing);
-      viewSec.style.display = isEditing ? 'block' : 'none';
+        const editSec = document.getElementById('edit-section');
+        const viewSec = document.getElementById('view-section');
+        const isEditing = editSec.classList.contains('active');
+        if (!isEditing) {
+            document.getElementById('edit-nombre').value = user.nombre;
+            document.getElementById('edit-edad').value = user.edad;
+            document.getElementById('edit-genero').value = user.genero || 'Hombre';
+            document.getElementById('edit-peso').value = user.peso;
+            document.getElementById('edit-altura').value = user.altura;
+            document.getElementById('edit-objetivo').value = user.objetivo;
+            document.getElementById('edit-lesion-notas').value = user.lesionNotas || '';
+            Object.entries(lesionMap).forEach(([nombre, id]) => {
+                const el = document.getElementById(id);
+                if (el) el.checked = user.lesiones && user.lesiones.includes(nombre);
+            });
+            document.getElementById('edit-error').classList.add('hidden');
+            document.getElementById('edit-success').classList.add('hidden');
+        }
+        editSec.classList.toggle('active', !isEditing);
+        viewSec.style.display = isEditing ? 'block' : 'none';
     }
 
     async function saveProfile() {
-      const errEl = document.getElementById('edit-error');
-      const sucEl = document.getElementById('edit-success');
-      errEl.classList.add('hidden');
-      sucEl.classList.add('hidden');
-
-      const lesiones = Object.entries(lesionMap)
-        .filter(([, id]) => { const el = document.getElementById(id); return el && el.checked; })
-        .map(([nombre]) => nombre);
-
-      const datos = {
-        nombre:      document.getElementById('edit-nombre').value.trim(),
-        edad:        parseInt(document.getElementById('edit-edad').value),
-        genero:      document.getElementById('edit-genero').value,
-        peso:        parseFloat(document.getElementById('edit-peso').value),
-        altura:      parseInt(document.getElementById('edit-altura').value),
-        objetivo:    document.getElementById('edit-objetivo').value,
-        lesiones,
-        lesionNotas: document.getElementById('edit-lesion-notas').value
-      };
-
-      if (!datos.nombre || isNaN(datos.peso) || isNaN(datos.altura)) {
-        errEl.textContent = 'Rellena todos los campos obligatorios.';
-        errEl.classList.remove('hidden');
-        return;
-      }
-
-      try {
-        const updated = await apiUpdateUsuario(user.id, datos);
-        // Actualizar sesión con nuevos datos
-        user = { ...user, ...updated };
-        saveUser(user);
-        renderProfile();
-        sucEl.textContent = '✓ Perfil actualizado correctamente.';
-        sucEl.classList.remove('hidden');
-        setTimeout(() => toggleEdit(), 1500);
-      } catch(e) {
-        errEl.textContent = 'Error al guardar los cambios.';
-        errEl.classList.remove('hidden');
-      }
+        const errEl = document.getElementById('edit-error');
+        const sucEl = document.getElementById('edit-success');
+        errEl.classList.add('hidden'); sucEl.classList.add('hidden');
+        const lesiones = Object.entries(lesionMap)
+            .filter(([, id]) => { const el = document.getElementById(id); return el && el.checked; })
+            .map(([nombre]) => nombre);
+        const datos = {
+            nombre: document.getElementById('edit-nombre').value.trim(),
+            edad: parseInt(document.getElementById('edit-edad').value),
+            genero: document.getElementById('edit-genero').value,
+            peso: parseFloat(document.getElementById('edit-peso').value),
+            altura: parseInt(document.getElementById('edit-altura').value),
+            objetivo: document.getElementById('edit-objetivo').value,
+            lesiones,
+            lesionNotas: document.getElementById('edit-lesion-notas').value
+        };
+        if (!datos.nombre || isNaN(datos.peso) || isNaN(datos.altura)) {
+            errEl.textContent = 'Rellena todos los campos obligatorios.';
+            errEl.classList.remove('hidden'); return;
+        }
+        try {
+            const updated = await apiUpdateUsuario(user.id, datos);
+            user = {...user, ...updated};
+            saveUser(user);
+            renderProfile();
+            sucEl.textContent = 'Perfil actualizado correctamente.';
+            sucEl.classList.remove('hidden');
+            setTimeout(() => toggleEdit(), 1500);
+        } catch(e) {
+            errEl.textContent = 'Error al guardar los cambios.';
+            errEl.classList.remove('hidden');
+        }
     }
 
     renderProfile();
