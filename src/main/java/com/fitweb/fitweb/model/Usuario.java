@@ -33,6 +33,8 @@ public class Usuario {
     private List<String> lesiones;
 
     private String lesionNotas;
+    private String avatarColor;
+    private String nivelActividad;
 
     @Column(name = "fecha_registro")
     private LocalDateTime fechaRegistro = LocalDateTime.now();
@@ -62,4 +64,8 @@ public class Usuario {
     public void setLesionNotas(String lesionNotas) { this.lesionNotas = lesionNotas; }
     public LocalDateTime getFechaRegistro() { return fechaRegistro; }
     public void setFechaRegistro(LocalDateTime fechaRegistro) { this.fechaRegistro = fechaRegistro; }
+    public String getAvatarColor() { return avatarColor; }
+    public void setAvatarColor(String avatarColor) { this.avatarColor = avatarColor; }
+    public String getNivelActividad() { return nivelActividad; }
+    public void setNivelActividad(String nivelActividad) { this.nivelActividad = nivelActividad; }
 }

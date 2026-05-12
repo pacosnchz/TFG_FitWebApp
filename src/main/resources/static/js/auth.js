@@ -58,7 +58,15 @@ function calsTDEE(u) {
     let bmr = u.genero === 'Mujer'
         ? 10 * u.peso + 6.25 * u.altura - 5 * u.edad - 161
         : 10 * u.peso + 6.25 * u.altura - 5 * u.edad + 5;
-    let tdee = Math.round(bmr * 1.55);
+    const factores = {
+        sedentario: 1.2,
+        ligero: 1.375,
+        moderado: 1.55,
+        activo: 1.725,
+        muy_activo: 1.9
+    };
+    const factor = factores[u.nivelActividad] || 1.55;
+    let tdee = Math.round(bmr * factor);
     if (u.objetivo === 'Perder peso') tdee -= 400;
     else if (u.objetivo === 'Ganar músculo' || u.objetivo === 'Ganar peso') tdee += 300;
     return tdee;

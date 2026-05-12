@@ -9,10 +9,29 @@
         .greeting{margin-bottom:1.8rem}
         .greeting h2{font-size:22px;font-weight:700}
         .greeting p{color:var(--text2);font-size:14px;margin-top:3px}
+        .dash-section-title{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px}
+        .quick-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-top:1.5rem}
+        .quick-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem;text-align:center;cursor:pointer;transition:.2s;text-decoration:none;display:block}
+        .quick-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+        .quick-card svg{stroke:var(--accent);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;margin-bottom:.5rem}
+        .quick-card-label{font-weight:600;font-size:13px;color:var(--text)}
+        .quick-card-sub{font-size:11px;color:var(--text2);margin-top:3px}
+        .rutina-hoy-item{display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg3);border-radius:var(--radius2);margin-bottom:8px}
+        .rutina-hoy-num{width:24px;height:24px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
+        .rutina-hoy-name{font-size:13px;font-weight:600;flex:1}
+        .rutina-hoy-meta{font-size:11px;color:var(--text2)}
+        .macro-row{display:flex;gap:10px;margin-top:.8rem}
+        .macro-mini{flex:1;background:var(--bg3);border-radius:var(--radius2);padding:10px;text-align:center}
+        .macro-mini-val{font-size:16px;font-weight:700}
+        .macro-mini-label{font-size:11px;color:var(--text2);margin-top:2px}
+        .macro-mini-bar{height:3px;border-radius:2px;background:var(--border2);margin-top:6px;overflow:hidden}
+        .macro-mini-fill{height:100%;border-radius:2px;transition:.4s}
+        .empty-dash{font-size:13px;color:var(--text3);padding:1rem 0;text-align:center}
+        .proxima-rutina{background:var(--bg3);border-radius:var(--radius2);padding:12px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+        .proxima-badge{background:rgba(224,123,34,.15);color:var(--accent);font-size:11px;font-weight:600;padding:3px 8px;border-radius:12px;white-space:nowrap}
     </style>
 </head>
 <body>
-
 
 <div class="page-content">
     <div class="greeting">
@@ -20,6 +39,7 @@
         <p id="greeting-sub">Cargando tu plan...</p>
     </div>
 
+    <!-- STATS -->
     <div class="stats-grid">
         <div class="stat-card">
             <div class="sc-label">Objetivo</div>
@@ -36,152 +56,238 @@
         </div>
         <div class="stat-card">
             <div class="sc-label">Récords guardados</div>
-            <div class="sc-val" id="dash-records">0</div>
+            <div class="sc-val" id="dash-records">—</div>
         </div>
     </div>
 
+    <!-- DOS COLUMNAS -->
     <div class="two-col">
-        <div class="card">
-            <div class="card-title">
-                Entrenamiento del día
-                <span id="dash-dia">—</span>
-            </div>
-            <div class="workout-list">
-                <div class="workout-item">
-                    <div class="wi-icon"><svg viewBox="0 0 24 24"><path d="M6 4v16M18 4v16M3 8h3M18 8h3M3 16h3M18 16h3M6 12h12"/></svg></div>
-                    <div class="wi-info"><p>Press de banca</p><small>4 series × 8 reps · 60 seg descanso</small></div>
-                    <span class="wi-badge badge-green">Completado</span>
+
+        <!-- COLUMNA IZQUIERDA -->
+        <div style="display:flex;flex-direction:column;gap:1.2rem">
+
+            <!-- RUTINA DE HOY -->
+            <div class="card">
+                <div class="card-title">
+                    Rutina de hoy
+                    <span id="dash-dia-label">—</span>
                 </div>
-                <div class="workout-item">
-                    <div class="wi-icon"><svg viewBox="0 0 24 24"><path d="M4 6h16M8 6v4a4 4 0 0 0 8 0V6"/></svg></div>
-                    <div class="wi-info"><p>Dominadas</p><small>3 series × 6 reps</small></div>
-                    <span class="wi-badge badge-amber">Pendiente</span>
-                </div>
-                <div class="workout-item">
-                    <div class="wi-icon"><svg viewBox="0 0 24 24"><path d="M6 4v16M18 4v16M3 8h3M18 8h3M3 16h3M18 16h3M6 12h12"/></svg></div>
-                    <div class="wi-info"><p>Press militar</p><small>3 series × 10 reps</small></div>
-                    <span class="wi-badge badge-amber">Pendiente</span>
-                </div>
-                <div class="workout-item">
-                    <div class="wi-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="2"/><path d="M12 7v8M9 21l3-6 3 6"/></svg></div>
-                    <div class="wi-info"><p>Estiramiento hombros</p><small>5 min · Post-entreno</small></div>
-                    <span class="wi-badge badge-amber">Pendiente</span>
+                <div id="rutina-hoy-content">
+                    <div class="empty-dash">Cargando...</div>
                 </div>
             </div>
+
+            <!-- PRÓXIMA RUTINA PENDIENTE -->
+            <div class="card">
+                <div class="card-title">Próxima rutina pendiente</div>
+                <div id="proxima-rutina-content">
+                    <div class="empty-dash">Cargando...</div>
+                </div>
+            </div>
+
         </div>
 
+        <!-- COLUMNA DERECHA -->
         <div style="display:flex;flex-direction:column;gap:1.2rem">
+
+            <!-- MACROS DE HOY -->
+            <div class="card">
+                <div class="card-title">Calorías y macros hoy</div>
+                <div style="text-align:center;padding:.5rem 0">
+                    <div style="font-size:28px;font-weight:800;color:var(--accent)" id="dash-cals-hoy">0</div>
+                    <div style="font-size:12px;color:var(--text2)">de <span id="dash-cals-obj">—</span> kcal objetivo</div>
+                </div>
+                <div class="macro-row">
+                    <div class="macro-mini">
+                        <div class="macro-mini-val" id="dm-prot" style="color:#378add">0g</div>
+                        <div class="macro-mini-label">Proteína</div>
+                        <div class="macro-mini-bar"><div class="macro-mini-fill" id="dmbar-prot" style="width:0%;background:#378add"></div></div>
+                    </div>
+                    <div class="macro-mini">
+                        <div class="macro-mini-val" id="dm-carbs" style="color:#8bc34a">0g</div>
+                        <div class="macro-mini-label">Carbos</div>
+                        <div class="macro-mini-bar"><div class="macro-mini-fill" id="dmbar-carbs" style="width:0%;background:#8bc34a"></div></div>
+                    </div>
+                    <div class="macro-mini">
+                        <div class="macro-mini-val" id="dm-fats" style="color:var(--accent3)">0g</div>
+                        <div class="macro-mini-label">Grasas</div>
+                        <div class="macro-mini-bar"><div class="macro-mini-fill" id="dmbar-fats" style="width:0%;background:var(--accent3)"></div></div>
+                    </div>
+                </div>
+                <div style="margin-top:12px;text-align:center">
+                    <a href="/dieta.html" style="font-size:12px;color:var(--accent);text-decoration:none">Ver registro completo →</a>
+                </div>
+            </div>
+
+            <!-- PROGRESO SEMANAL -->
             <div class="card">
                 <div class="card-title">Progreso semanal</div>
                 <div class="progress-bar-wrap">
-                    <div class="pb-label"><span>Entrenamientos</span><span>3/5</span></div>
-                    <div class="pb"><div class="pb-fill" style="width:60%"></div></div>
+                    <div class="pb-label"><span>Rutinas completadas</span><span id="prog-rutinas">0/0</span></div>
+                    <div class="pb"><div class="pb-fill" id="pb-rutinas" style="width:0%"></div></div>
                 </div>
                 <div class="progress-bar-wrap">
-                    <div class="pb-label"><span>Objetivos completados</span><span>7/10</span></div>
-                    <div class="pb"><div class="pb-fill" style="width:70%"></div></div>
+                    <div class="pb-label"><span>Récords esta semana</span><span id="prog-records">0</span></div>
+                    <div class="pb"><div class="pb-fill" id="pb-records" style="width:0%"></div></div>
                 </div>
             </div>
-            <div class="card">
-                <div class="card-title">Calorias estimadas</div>
-                <div class="imc-display" style="padding:.5rem">
-                    <div style="font-size:28px;font-weight:800;color:var(--accent)" id="dash-cals">—</div>
-                    <div style="font-size:12px;color:var(--text2)">kcal/dia recomendadas</div>
-                </div>
-                <div class="mini-macro">
-                    <div class="mm"><p>Proteina</p><strong id="dash-prot" style="color:#378add">—</strong></div>
-                    <div class="mm"><p>Carbos</p><strong id="dash-carbs" style="color:#8bc34a">—</strong></div>
-                    <div class="mm"><p>Grasas</p><strong id="dash-fats" style="color:var(--accent)">—</strong></div>
-                </div>
-            </div>
+
         </div>
     </div>
 
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-top:1.2rem">
-        <a href="/ejercicios.html" style="text-decoration:none">
-            <div class="card" style="text-align:center;cursor:pointer;transition:.2s" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
-                <div style="margin-bottom:.5rem;display:flex;justify-content:center">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4v16M18 4v16M3 8h3M18 8h3M3 16h3M18 16h3M6 12h12"/></svg>
-                </div>
-                <div style="font-weight:600;font-size:14px">Biblioteca de ejercicios</div>
-                <div style="font-size:12px;color:var(--text2);margin-top:4px">Ver todos los ejercicios</div>
-            </div>
-        </a>
-        <a href="/rutinas.html" style="text-decoration:none">
-            <div class="card" style="text-align:center;cursor:pointer;transition:.2s" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
-                <div style="margin-bottom:.5rem;display:flex;justify-content:center">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>
-                </div>
-                <div style="font-weight:600;font-size:14px">Mis rutinas</div>
-                <div style="font-size:12px;color:var(--text2);margin-top:4px">Gestionar mis entrenamientos</div>
-            </div>
-        </a>
-        <a href="/records.html" style="text-decoration:none">
-            <div class="card" style="text-align:center;cursor:pointer;transition:.2s" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
-                <div style="margin-bottom:.5rem;display:flex;justify-content:center">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>
-                </div>
-                <div style="font-weight:600;font-size:14px">Mis records</div>
-                <div style="font-size:12px;color:var(--text2);margin-top:4px">Gestionar mis PRs</div>
-            </div>
-        </a>
-        <a href="/chatbot.html" style="text-decoration:none">
-            <div class="card" style="text-align:center;cursor:pointer;transition:.2s" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
-                <div style="margin-bottom:.5rem;display:flex;justify-content:center">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4M8 15h.01M12 15h.01M16 15h.01"/></svg>
-                </div>
-                <div style="font-weight:600;font-size:14px">Entrenador IA</div>
-                <div style="font-size:12px;color:var(--text2);margin-top:4px">Hablar con mi coach</div>
-            </div>
-        </a>
-        <a href="/perfil.html" style="text-decoration:none">
-            <div class="card" style="text-align:center;cursor:pointer;transition:.2s" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
-                <div style="margin-bottom:.5rem;display:flex;justify-content:center">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
-                </div>
-                <div style="font-weight:600;font-size:14px">Mi perfil</div>
-                <div style="font-size:12px;color:var(--text2);margin-top:4px">Ver y editar mis datos</div>
-            </div>
-        </a>
+    <!-- ACCESOS RÁPIDOS -->
+    <div style="margin-top:1.5rem">
+        <div class="dash-section-title">Accesos rápidos</div>
+        <div class="quick-grid">
+            <a href="/ejercicios.html" class="quick-card">
+                <svg width="28" height="28" viewBox="0 0 24 24"><path d="M6 4v16M18 4v16M3 8h3M18 8h3M3 16h3M18 16h3M6 12h12"/></svg>
+                <div class="quick-card-label">Ejercicios</div>
+                <div class="quick-card-sub">Biblioteca completa</div>
+            </a>
+            <a href="/rutinas.html" class="quick-card">
+                <svg width="28" height="28" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>
+                <div class="quick-card-label">Rutinas</div>
+                <div class="quick-card-sub">Gestionar entrenamientos</div>
+            </a>
+            <a href="/dieta.html" class="quick-card">
+                <svg width="28" height="28" viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+                <div class="quick-card-label">Dieta</div>
+                <div class="quick-card-sub">Registro nutricional</div>
+            </a>
+            <a href="/records.html" class="quick-card">
+                <svg width="28" height="28" viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>
+                <div class="quick-card-label">Récords</div>
+                <div class="quick-card-sub">Mis marcas personales</div>
+            </a>
+            <a href="/chatbot.html" class="quick-card">
+                <svg width="28" height="28" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4M8 15h.01M12 15h.01M16 15h.01"/></svg>
+                <div class="quick-card-label">IA Coach</div>
+                <div class="quick-card-sub">Tu entrenador personal</div>
+            </a>
+            <a href="/perfil.html" class="quick-card">
+                <svg width="28" height="28" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+                <div class="quick-card-label">Perfil</div>
+                <div class="quick-card-sub">Ver y editar mis datos</div>
+            </a>
+        </div>
     </div>
 </div>
 
 <script src="/js/auth.js"></script>
 <script src="/js/api.js"></script>
 <script src="/js/nav.js"></script>
-<script>
-    renderNav('menu');
-</script>
+<script>renderNav('menu');</script>
 <script>
     const user = requireAuth();
     const hr = new Date().getHours();
     const sal = hr < 13 ? 'Buenos dias' : hr < 20 ? 'Buenas tardes' : 'Buenas noches';
     const dias = ['Domingo','Lunes','Martes','Miercoles','Jueves','Viernes','Sabado'];
-    const dia = dias[new Date().getDay()];
+    const diaNum = new Date().getDay();
+    const dia = dias[diaNum];
+    const hoy = new Date().toISOString().split('T')[0];
 
     document.getElementById('topbar-username').textContent = user.nombre.split(' ')[0];
     document.getElementById('user-avatar').textContent = getInitials(user.nombre);
     document.getElementById('greeting-text').textContent = sal + ', ' + user.nombre.split(' ')[0];
-    document.getElementById('greeting-sub').textContent = dia + ' · Semana en curso';
-    document.getElementById('dash-dia').textContent = dia + ' — Tren superior';
+    document.getElementById('greeting-sub').textContent = dia + ' · ' + new Date().toLocaleDateString('es-ES', {day:'numeric', month:'long', year:'numeric'});
+    document.getElementById('dash-dia-label').textContent = dia;
 
     const imc = getIMC(user.peso, user.altura);
-    const cals = calsTDEE(user);
-    const prot = Math.round(user.peso * 2);
-    const fats = Math.round(cals * 0.25 / 9);
-    const carbs = Math.round((cals - prot * 4 - fats * 9) / 4);
+    const calsObj = calsTDEE(user);
+    const protObj = Math.round(user.peso * 2);
+    const fatsObj = Math.round(calsObj * 0.25 / 9);
+    const carbsObj = Math.round((calsObj - protObj * 4 - fatsObj * 9) / 4);
 
     document.getElementById('dash-objetivo').textContent = user.objetivo;
     document.getElementById('dash-imc').textContent = imc;
     document.getElementById('dash-imc-label').textContent = imcLabel(imc);
     document.getElementById('dash-peso').textContent = user.peso + ' kg';
-    document.getElementById('dash-cals').textContent = cals.toLocaleString('es-ES');
-    document.getElementById('dash-prot').textContent = prot + 'g';
-    document.getElementById('dash-carbs').textContent = carbs + 'g';
-    document.getElementById('dash-fats').textContent = fats + 'g';
+    document.getElementById('dash-cals-obj').textContent = calsObj;
 
+    // Récords
     apiGetRecords(user.id).then(data => {
         document.getElementById('dash-records').textContent = data.length;
+        // Records esta semana (últimos 7 días)
+        const hace7 = new Date(); hace7.setDate(hace7.getDate() - 7);
+        const recientes = data.filter(r => r.fecha && new Date(r.fecha) >= hace7).length;
+        document.getElementById('prog-records').textContent = recientes;
+        document.getElementById('pb-records').style.width = Math.min(100, recientes * 20) + '%';
+    }).catch(() => { document.getElementById('dash-records').textContent = '0'; });
+
+    // Rutinas
+    fetch(`/api/rutinas/usuario/${user.id}`).then(r => r.json()).then(rutinas => {
+        // Rutina de hoy
+        const rutinasHoy = rutinas.filter(r => r.diaSemana === dia || r.fecha === hoy);
+        const contenido = document.getElementById('rutina-hoy-content');
+        if (rutinasHoy.length === 0) {
+            contenido.innerHTML = '<div class="empty-dash">No hay rutinas para hoy.<br><a href="/rutinas.html" style="color:var(--accent);font-size:12px">Crear rutina →</a></div>';
+        } else {
+            const r = rutinasHoy[0];
+            const ejs = (r.ejercicios || []).slice(0, 4);
+            contenido.innerHTML = `
+                <div style="font-size:14px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between">
+                    ${r.nombre}
+                    <span class="wi-badge ${r.completada ? 'badge-green' : 'badge-amber'}">${r.completada ? 'Completada' : 'Pendiente'}</span>
+                </div>
+                ${ejs.map((e, i) => `
+                    <div class="rutina-hoy-item">
+                        <div class="rutina-hoy-num">${i+1}</div>
+                        <div class="rutina-hoy-name">${e.nombreEjercicio}</div>
+                        <div class="rutina-hoy-meta">${e.series}×${e.repeticiones}</div>
+                    </div>`).join('')}
+                ${(r.ejercicios||[]).length > 4 ? `<div style="font-size:12px;color:var(--text3);text-align:center;margin-top:4px">+${(r.ejercicios||[]).length - 4} ejercicios más</div>` : ''}
+                <div style="margin-top:10px;text-align:right">
+                    <a href="/rutinas.html" style="font-size:12px;color:var(--accent);text-decoration:none">Ver todas las rutinas →</a>
+                </div>`;
+        }
+
+        // Próxima rutina pendiente
+        const pendientes = rutinas.filter(r => !r.completada && r.fecha >= hoy);
+        const proximaEl = document.getElementById('proxima-rutina-content');
+        if (pendientes.length === 0) {
+            proximaEl.innerHTML = '<div class="empty-dash">No hay rutinas pendientes.<br><a href="/rutinas.html" style="color:var(--accent);font-size:12px">Crear rutina →</a></div>';
+        } else {
+            const p = pendientes[0];
+            proximaEl.innerHTML = `
+                <div class="proxima-rutina">
+                    <div>
+                        <div style="font-size:14px;font-weight:700">${p.nombre}</div>
+                        <div style="font-size:12px;color:var(--text2);margin-top:3px">${p.diaSemana || ''} ${p.fecha ? '· ' + p.fecha : ''} · ${(p.ejercicios||[]).length} ejercicios</div>
+                    </div>
+                    <span class="proxima-badge">Pendiente</span>
+                </div>`;
+        }
+
+        // Progreso semanal rutinas
+        const inicioSemana = new Date();
+        inicioSemana.setDate(inicioSemana.getDate() - diaNum);
+        const rutinasSemanales = rutinas.filter(r => r.fecha >= inicioSemana.toISOString().split('T')[0]);
+        const completadasSemana = rutinasSemanales.filter(r => r.completada).length;
+        const totalSemana = rutinasSemanales.length;
+        document.getElementById('prog-rutinas').textContent = `${completadasSemana}/${totalSemana}`;
+        document.getElementById('pb-rutinas').style.width = totalSemana > 0 ? Math.round(completadasSemana / totalSemana * 100) + '%' : '0%';
+
+    }).catch(() => {
+        document.getElementById('rutina-hoy-content').innerHTML = '<div class="empty-dash">Error al cargar rutinas</div>';
+    });
+
+    // Macros de hoy desde dieta
+    fetch(`/api/dieta/comidas/${user.id}?fecha=${hoy}`).then(r => r.json()).then(comidas => {
+        const totals = comidas.reduce((acc, c) => {
+            acc.cals += c.calorias || 0;
+            acc.prot += c.proteinas || 0;
+            acc.carbs += c.carbos || 0;
+            acc.fats += c.grasas || 0;
+            return acc;
+        }, {cals:0, prot:0, carbs:0, fats:0});
+
+        document.getElementById('dash-cals-hoy').textContent = Math.round(totals.cals);
+        document.getElementById('dm-prot').textContent = Math.round(totals.prot) + 'g';
+        document.getElementById('dm-carbs').textContent = Math.round(totals.carbs) + 'g';
+        document.getElementById('dm-fats').textContent = Math.round(totals.fats) + 'g';
+        document.getElementById('dmbar-prot').style.width = Math.min(100, Math.round(totals.prot / protObj * 100)) + '%';
+        document.getElementById('dmbar-carbs').style.width = Math.min(100, Math.round(totals.carbs / carbsObj * 100)) + '%';
+        document.getElementById('dmbar-fats').style.width = Math.min(100, Math.round(totals.fats / fatsObj * 100)) + '%';
     }).catch(() => {});
 </script>
 </body>

@@ -6,138 +6,380 @@
     <title>FitWeb — Mi Perfil</title>
     <link rel="stylesheet" href="/css/styles.css"/>
     <style>
-        .edit-section{display:none}
-        .edit-section.active{display:block}
+        .profile-hero{background:linear-gradient(135deg,var(--bg2) 0%,var(--bg3) 100%);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap}
+        .avatar-xl{width:80px;height:80px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;color:#fff;flex-shrink:0;cursor:pointer;transition:.2s;position:relative;border:3px solid rgba(255,255,255,.15)}
+        .avatar-xl:hover{transform:scale(1.05)}
+        .avatar-xl .edit-overlay{position:absolute;inset:0;border-radius:50%;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;opacity:0;transition:.2s}
+        .avatar-xl:hover .edit-overlay{opacity:1}
+        .profile-hero-info{flex:1}
+        .profile-hero-name{font-size:22px;font-weight:800;margin-bottom:4px}
+        .profile-hero-email{font-size:13px;color:var(--text2);margin-bottom:8px}
+        .profile-hero-badges{display:flex;gap:8px;flex-wrap:wrap}
+        .hero-badge{padding:4px 10px;border-radius:12px;font-size:12px;font-weight:600}
+        .hero-badge-obj{background:rgba(224,123,34,.15);color:var(--accent);border:1px solid rgba(224,123,34,.3)}
+        .hero-badge-streak{background:rgba(99,153,34,.15);color:var(--green);border:1px solid rgba(99,153,34,.3)}
+        .hero-badge-imc{background:rgba(55,138,221,.15);color:var(--blue);border:1px solid rgba(55,138,221,.3)}
+        .profile-hero-actions{display:flex;gap:8px;flex-wrap:wrap}
+
+        .btn{padding:9px 18px;border-radius:var(--radius2);font-size:13px;font-weight:600;cursor:pointer;border:none;transition:.15s;display:inline-flex;align-items:center;gap:6px}
+        .btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{background:var(--accent2)}
+        .btn-ghost{background:transparent;color:var(--text2);border:1px solid var(--border2)}.btn-ghost:hover{background:var(--bg3);color:var(--text)}
+        .btn-danger{background:transparent;color:var(--red);border:1px solid rgba(226,75,74,.3)}.btn-danger:hover{background:rgba(226,75,74,.1)}
+        .btn-sm{padding:6px 12px;font-size:12px}
+
+        .stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin-bottom:1.5rem}
+        .stat-box{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;text-align:center}
+        .stat-box-val{font-size:24px;font-weight:800;color:var(--accent)}
+        .stat-box-label{font-size:11px;color:var(--text2);margin-top:3px}
+
+        .profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem}
+        @media(max-width:700px){.profile-grid{grid-template-columns:1fr}}
+
+        .info-row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border);font-size:13px}
+        .info-row:last-child{border:none}
+        .info-row span:first-child{color:var(--text2)}
+        .info-row span:last-child{font-weight:600}
+
+        .imc-display{text-align:center;padding:.5rem 0}
+        .imc-val{font-size:42px;font-weight:800;color:var(--accent)}
+        .imc-label{font-size:14px;color:var(--text2);margin-top:4px}
+        .imc-bar{height:10px;border-radius:5px;background:linear-gradient(to right,#378add,#639922,#e07b22,#e24b4a);margin:1rem 0 .5rem;position:relative}
+        .imc-marker{position:absolute;top:-4px;width:18px;height:18px;background:#fff;border:2px solid var(--accent);border-radius:50%;transform:translateX(-50%);transition:.5s;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+        .imc-ticks{display:flex;justify-content:space-between;font-size:10px;color:var(--text3)}
+
+        .weight-progress{margin-top:1rem}
+        .wp-row{display:flex;justify-content:space-between;font-size:12px;color:var(--text2);margin-bottom:6px}
+        .wp-bar{height:8px;border-radius:4px;background:var(--border2);overflow:hidden}
+        .wp-fill{height:100%;background:linear-gradient(to right,var(--accent),var(--green));border-radius:4px;transition:.6s}
+
+        .lesion-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:.5rem}
+        .lesion-tag{background:rgba(226,75,74,.12);border:1px solid rgba(226,75,74,.25);color:#f87171;padding:3px 10px;border-radius:12px;font-size:12px}
+
+        .logros-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:.5rem}
+        .logro-item{background:var(--bg3);border-radius:var(--radius2);padding:10px 12px;display:flex;align-items:center;gap:10px}
+        .logro-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+        .logro-icon svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+        .logro-name{font-size:12px;font-weight:600}
+        .logro-sub{font-size:11px;color:var(--text3);margin-top:1px}
+        .logro-locked{opacity:.35;filter:grayscale(1)}
+
+        .mini-macro{display:flex;gap:8px;margin-top:.8rem}
+        .mm{flex:1;background:var(--bg3);border-radius:var(--radius2);padding:8px;text-align:center}
+        .mm p{font-size:12px;color:var(--text2);margin-bottom:3px}
+        .mm strong{font-size:14px;font-weight:700}
+
+        /* Modales */
+        .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:1000;display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;pointer-events:none;transition:.2s}
+        .modal-overlay.open{opacity:1;pointer-events:all}
+        .modal{background:var(--bg2);border:1px solid var(--border2);border-radius:14px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;transform:translateY(20px);transition:.2s}
+        .modal-overlay.open .modal{transform:translateY(0)}
+        .modal-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--bg2);z-index:1}
+        .modal-title{font-size:17px;font-weight:700}
+        .modal-close{background:none;border:none;color:var(--text2);cursor:pointer;font-size:20px;padding:4px;line-height:1}
+        .modal-body{padding:24px}
+        .modal-footer{padding:16px 24px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end}
+        .form-group{margin-bottom:16px}
+        .form-label{display:block;font-size:13px;font-weight:600;margin-bottom:6px;color:var(--text2)}
+        .form-input,.form-select,.form-textarea{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius2);padding:9px 12px;color:var(--text);font-size:14px;outline:none;transition:.15s;font-family:inherit}
+        .form-input:focus,.form-select:focus{border-color:var(--accent)}
+        .form-select option{background:var(--bg3)}
+        .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+        .error-msg{background:rgba(226,75,74,.1);border:1px solid rgba(226,75,74,.3);color:#f87171;padding:8px 12px;border-radius:var(--radius2);font-size:13px;margin-bottom:1rem}
+        .success-msg{background:rgba(99,153,34,.1);border:1px solid rgba(99,153,34,.3);color:#8bc34a;padding:8px 12px;border-radius:var(--radius2);font-size:13px;margin-bottom:1rem}
+        .hidden{display:none!important}
+
         .lesion-checks{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}
         .lesion-check{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text2);cursor:pointer}
         .lesion-check input{accent-color:var(--accent);width:15px;height:15px}
+
+        /* Color picker avatar */
+        .color-picker-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-top:8px}
+        .color-swatch{width:36px;height:36px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:.15s}
+        .color-swatch:hover,.color-swatch.selected{border-color:#fff;transform:scale(1.1)}
+
+        .toast{position:fixed;bottom:24px;right:24px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius);padding:12px 18px;font-size:13px;font-weight:500;z-index:9999;transform:translateY(80px);opacity:0;transition:.3s;max-width:300px}
+        .toast.show{transform:translateY(0);opacity:1}
+        .toast.success{border-left:3px solid var(--green)}
+        .toast.error{border-left:3px solid var(--red)}
     </style>
 </head>
 <body>
 
 <div class="page-content">
-    <div class="profile-top">
-        <div class="avatar-lg" id="profile-avatar">?</div>
-        <div class="profile-info">
-            <h2 id="profile-name">—</h2>
-            <p id="profile-email">—</p>
-            <div class="obj-pill" id="profile-obj">—</div>
+
+    <!-- HERO -->
+    <div class="profile-hero">
+        <div class="avatar-xl" id="profile-avatar-xl" onclick="openColorPicker()">
+            <span id="profile-initials">?</span>
+            <div class="edit-overlay">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            </div>
         </div>
-        <div style="margin-left:auto;display:flex;gap:8px">
-            <button class="btn-sm" onclick="toggleEdit()">Editar perfil</button>
-            <button class="btn-sm" style="background:var(--bg3);color:var(--red);border:1px solid rgba(226,75,74,.3)" onclick="doLogout()">Cerrar sesion</button>
+        <div class="profile-hero-info">
+            <div class="profile-hero-name" id="profile-name">—</div>
+            <div class="profile-hero-email" id="profile-email">—</div>
+            <div class="profile-hero-badges">
+                <span class="hero-badge hero-badge-obj" id="hero-obj">—</span>
+                <span class="hero-badge hero-badge-imc" id="hero-imc">IMC —</span>
+                <span class="hero-badge hero-badge-streak" id="hero-streak">🔥 — días</span>
+            </div>
+        </div>
+        <div class="profile-hero-actions">
+            <button class="btn btn-primary btn-sm" onclick="openModal('modal-edit')">Editar perfil</button>
+            <button class="btn btn-ghost btn-sm" onclick="openModal('modal-password')">Cambiar contraseña</button>
+            <button class="btn btn-danger btn-sm" onclick="doLogout()">Salir</button>
         </div>
     </div>
 
-    <div id="view-section">
-        <div class="profile-grid">
-            <div class="card">
-                <div class="card-title">Datos fisicos</div>
-                <div id="profile-data-rows"></div>
-            </div>
-            <div class="card">
-                <div class="card-title">Indice de Masa Corporal</div>
-                <div class="imc-display">
-                    <div class="imc-val" id="profile-imc">—</div>
-                    <div class="imc-label" id="profile-imc-label">—</div>
-                    <div class="imc-bar"><div class="imc-marker" id="imc-marker" style="left:50%"></div></div>
-                    <div class="imc-ticks"><span>Bajo</span><span>Normal</span><span>Sobrepeso</span><span>Obesidad</span></div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-title">Lesiones / Limitaciones</div>
-                <div class="lesion-tags" id="profile-lesions"></div>
-                <div id="profile-lesion-notes" style="margin-top:.8rem;font-size:13px;color:var(--text2)"></div>
-            </div>
-            <div class="card">
-                <div class="card-title">Calorias y macros</div>
-                <div style="text-align:center;padding:.5rem 0">
-                    <div style="font-size:32px;font-weight:800;color:var(--accent)" id="profile-cals">—</div>
-                    <div style="font-size:12px;color:var(--text2)">kcal/dia recomendadas</div>
-                </div>
-                <div class="mini-macro" style="margin-top:.8rem">
-                    <div class="mm"><p>Proteina</p><strong id="profile-prot" style="color:#378add">—</strong></div>
-                    <div class="mm"><p>Carbos</p><strong id="profile-carbs" style="color:#8bc34a">—</strong></div>
-                    <div class="mm"><p>Grasas</p><strong id="profile-fats" style="color:var(--accent)">—</strong></div>
-                </div>
-            </div>
+    <!-- STATS RÁPIDAS -->
+    <div class="stats-row">
+        <div class="stat-box">
+            <div class="stat-box-val" id="st-rutinas">—</div>
+            <div class="stat-box-label">Rutinas totales</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-box-val" id="st-completadas">—</div>
+            <div class="stat-box-label">Completadas</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-box-val" id="st-records">—</div>
+            <div class="stat-box-label">Récords</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-box-val" id="st-comidas">—</div>
+            <div class="stat-box-label">Comidas hoy</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-box-val" id="st-cals">—</div>
+            <div class="stat-box-label">kcal objetivo</div>
         </div>
     </div>
 
-    <div id="edit-section" class="edit-section">
-        <div class="card" style="max-width:600px">
-            <div class="card-title">Editar perfil</div>
+    <!-- GRID PRINCIPAL -->
+    <div class="profile-grid">
+
+        <!-- Datos físicos -->
+        <div class="card">
+            <div class="card-title">Datos físicos</div>
+            <div id="profile-data-rows"></div>
+            <div class="weight-progress" id="weight-progress-section">
+                <div class="wp-row">
+                    <span>Progreso hacia objetivo</span>
+                    <span id="wp-label">—</span>
+                </div>
+                <div class="wp-bar"><div class="wp-fill" id="wp-fill" style="width:0%"></div></div>
+            </div>
+        </div>
+
+        <!-- IMC -->
+        <div class="card">
+            <div class="card-title">Índice de Masa Corporal</div>
+            <div class="imc-display">
+                <div class="imc-val" id="profile-imc">—</div>
+                <div class="imc-label" id="profile-imc-label">—</div>
+                <div class="imc-bar"><div class="imc-marker" id="imc-marker" style="left:50%"></div></div>
+                <div class="imc-ticks"><span>Bajo</span><span>Normal</span><span>Sobrepeso</span><span>Obesidad</span></div>
+            </div>
+        </div>
+
+        <!-- Calorías -->
+        <div class="card">
+            <div class="card-title">Calorías y macros diarios</div>
+            <div style="text-align:center;padding:.5rem 0">
+                <div style="font-size:32px;font-weight:800;color:var(--accent)" id="profile-cals">—</div>
+                <div style="font-size:12px;color:var(--text2)">kcal/día recomendadas</div>
+            </div>
+            <div class="mini-macro">
+                <div class="mm"><p>Proteína</p><strong id="profile-prot" style="color:#378add">—</strong></div>
+                <div class="mm"><p>Carbos</p><strong id="profile-carbs" style="color:#8bc34a">—</strong></div>
+                <div class="mm"><p>Grasas</p><strong id="profile-fats" style="color:var(--accent)">—</strong></div>
+            </div>
+        </div>
+
+        <!-- Lesiones -->
+        <div class="card">
+            <div class="card-title">Lesiones / Limitaciones</div>
+            <div class="lesion-tags" id="profile-lesions"></div>
+            <div id="profile-lesion-notes" style="margin-top:.8rem;font-size:13px;color:var(--text2)"></div>
+        </div>
+
+        <!-- Logros -->
+        <div class="card" style="grid-column:1/-1">
+            <div class="card-title">Logros</div>
+            <div class="logros-grid" id="logros-grid"></div>
+        </div>
+
+    </div>
+</div>
+
+<!-- MODAL EDITAR PERFIL -->
+<div class="modal-overlay" id="modal-edit">
+    <div class="modal">
+        <div class="modal-header">
+            <div class="modal-title">Editar perfil</div>
+            <button class="modal-close" onclick="closeModal('modal-edit')">×</button>
+        </div>
+        <div class="modal-body">
             <div id="edit-error" class="error-msg hidden"></div>
             <div id="edit-success" class="success-msg hidden"></div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div class="form-row">
                 <div class="form-group" style="grid-column:1/-1">
-                    <label>Nombre completo</label>
-                    <input type="text" id="edit-nombre"/>
+                    <label class="form-label">Nombre completo</label>
+                    <input class="form-input" type="text" id="edit-nombre"/>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Edad</label>
+                    <input class="form-input" type="number" id="edit-edad" min="14" max="99"/>
                 </div>
                 <div class="form-group">
-                    <label>Edad</label>
-                    <input type="number" id="edit-edad" min="14" max="99"/>
-                </div>
-                <div class="form-group">
-                    <label>Genero</label>
-                    <select id="edit-genero"><option>Hombre</option><option>Mujer</option><option>Otro</option></select>
-                </div>
-                <div class="form-group">
-                    <label>Peso (kg)</label>
-                    <input type="number" id="edit-peso" min="30" max="250"/>
-                </div>
-                <div class="form-group">
-                    <label>Altura (cm)</label>
-                    <input type="number" id="edit-altura" min="100" max="250"/>
-                </div>
-                <div class="form-group" style="grid-column:1/-1">
-                    <label>Objetivo</label>
-                    <select id="edit-objetivo">
-                        <option>Perder peso</option><option>Ganar musculo</option><option>Ganar peso</option><option>Mantenimiento</option>
+                    <label class="form-label">Género</label>
+                    <select class="form-select" id="edit-genero">
+                        <option>Hombre</option><option>Mujer</option><option>Otro</option>
                     </select>
                 </div>
             </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Peso (kg)</label>
+                    <input class="form-input" type="number" id="edit-peso" min="30" max="250"/>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Altura (cm)</label>
+                    <input class="form-input" type="number" id="edit-altura" min="100" max="250"/>
+                </div>
+            </div>
             <div class="form-group">
-                <label>Lesiones / Limitaciones</label>
+                <label class="form-label">Objetivo</label>
+                <select class="form-select" id="edit-objetivo">
+                    <option>Perder peso</option><option>Ganar musculo</option>
+                    <option>Ganar peso</option><option>Mantenimiento</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Nivel de actividad</label>
+                <select class="form-select" id="edit-actividad">
+                    <option value="sedentario">Sedentario (poco o nada de ejercicio)</option>
+                    <option value="ligero">Ligero (1-3 días/semana)</option>
+                    <option value="moderado">Moderado (3-5 días/semana)</option>
+                    <option value="activo">Activo (6-7 días/semana)</option>
+                    <option value="muy_activo">Muy activo (2 veces/día)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Lesiones / Limitaciones</label>
                 <div class="lesion-checks">
                     <label class="lesion-check"><input type="checkbox" id="e-hombro"> Hombro</label>
                     <label class="lesion-check"><input type="checkbox" id="e-rodilla"> Rodilla</label>
                     <label class="lesion-check"><input type="checkbox" id="e-lumbar"> Lumbar</label>
                     <label class="lesion-check"><input type="checkbox" id="e-cuello"> Cuello</label>
                     <label class="lesion-check"><input type="checkbox" id="e-tobillo"> Tobillo</label>
-                    <label class="lesion-check"><input type="checkbox" id="e-muneca"> Muneca</label>
+                    <label class="lesion-check"><input type="checkbox" id="e-muneca"> Muñeca</label>
                     <label class="lesion-check"><input type="checkbox" id="e-cadera"> Cadera</label>
                     <label class="lesion-check"><input type="checkbox" id="e-codo"> Codo</label>
                 </div>
             </div>
             <div class="form-group">
-                <label>Notas sobre lesiones (opcional)</label>
-                <textarea id="edit-lesion-notas" rows="2" style="resize:none"></textarea>
+                <label class="form-label">Notas sobre lesiones (opcional)</label>
+                <textarea class="form-textarea" id="edit-lesion-notas" rows="2" style="resize:none"></textarea>
             </div>
-            <div style="display:flex;gap:8px;margin-top:.5rem">
-                <button class="btn-ghost" onclick="toggleEdit()">Cancelar</button>
-                <button class="btn-sm" onclick="saveProfile()">Guardar cambios</button>
-            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-ghost" onclick="closeModal('modal-edit')">Cancelar</button>
+            <button class="btn btn-primary" onclick="saveProfile()">Guardar cambios</button>
         </div>
     </div>
 </div>
 
+<!-- MODAL CAMBIAR CONTRASEÑA -->
+<div class="modal-overlay" id="modal-password">
+    <div class="modal" style="max-width:400px">
+        <div class="modal-header">
+            <div class="modal-title">Cambiar contraseña</div>
+            <button class="modal-close" onclick="closeModal('modal-password')">×</button>
+        </div>
+        <div class="modal-body">
+            <div id="pwd-error" class="error-msg hidden"></div>
+            <div id="pwd-success" class="success-msg hidden"></div>
+            <div class="form-group">
+                <label class="form-label">Contraseña actual</label>
+                <input class="form-input" type="password" id="pwd-actual" placeholder="••••••••"/>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Nueva contraseña</label>
+                <input class="form-input" type="password" id="pwd-nueva" placeholder="••••••••"/>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Repetir nueva contraseña</label>
+                <input class="form-input" type="password" id="pwd-repetir" placeholder="••••••••"/>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-ghost" onclick="closeModal('modal-password')">Cancelar</button>
+            <button class="btn btn-primary" onclick="cambiarPassword()">Cambiar</button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL COLOR AVATAR -->
+<div class="modal-overlay" id="modal-color">
+    <div class="modal" style="max-width:340px">
+        <div class="modal-header">
+            <div class="modal-title">Color del avatar</div>
+            <button class="modal-close" onclick="closeModal('modal-color')">×</button>
+        </div>
+        <div class="modal-body">
+            <p style="font-size:13px;color:var(--text2);margin-bottom:12px">Elige un color para tu avatar</p>
+            <div class="color-picker-grid" id="color-picker-grid"></div>
+            <div style="margin-top:16px;display:flex;align-items:center;gap:12px">
+                <div class="avatar-xl" id="color-preview" style="width:48px;height:48px;font-size:18px;cursor:default">
+                    <span id="color-preview-initials">?</span>
+                </div>
+                <span style="font-size:13px;color:var(--text2)">Vista previa</span>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-ghost" onclick="closeModal('modal-color')">Cancelar</button>
+            <button class="btn btn-primary" onclick="saveColor()">Guardar</button>
+        </div>
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
 <script src="/js/auth.js"></script>
 <script src="/js/api.js"></script>
 <script src="/js/nav.js"></script>
-<script>
-    renderNav('perfil');
-</script>
+<script>renderNav('perfil');</script>
 <script>
     let user = requireAuth();
     document.getElementById('topbar-username').textContent = user.nombre.split(' ')[0];
     document.getElementById('user-avatar').textContent = getInitials(user.nombre);
+
+    const AVATAR_COLORS = [
+        '#e07b22','#e24b4a','#639922','#378add','#8b5cf6',
+        '#ec4899','#14b8a6','#f59e0b','#6366f1','#84cc16',
+        '#06b6d4','#f97316'
+    ];
+
+    let selectedColor = user.avatarColor || AVATAR_COLORS[0];
 
     const lesionMap = {
         Hombro:'e-hombro', Rodilla:'e-rodilla', Lumbar:'e-lumbar',
         Cuello:'e-cuello', Tobillo:'e-tobillo', Muneca:'e-muneca',
         Cadera:'e-cadera', Codo:'e-codo'
     };
+
+    function openModal(id) { document.getElementById(id).classList.add('open'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+    function showToast(msg, type='success') {
+        const t = document.getElementById('toast');
+        t.textContent = msg;
+        t.className = `toast ${type} show`;
+        setTimeout(() => t.classList.remove('show'), 3000);
+    }
 
     function renderProfile() {
         const ini = getInitials(user.nombre);
@@ -146,69 +388,208 @@
         const prot = Math.round(user.peso * 2);
         const fats = Math.round(cals * 0.25 / 9);
         const carbs = Math.round((cals - prot * 4 - fats * 9) / 4);
+        const color = user.avatarColor || AVATAR_COLORS[0];
 
+        // Avatar
+        document.getElementById('profile-initials').textContent = ini;
+        document.getElementById('profile-avatar-xl').style.background = color;
         document.getElementById('topbar-username').textContent = user.nombre.split(' ')[0];
         document.getElementById('user-avatar').textContent = ini;
-        document.getElementById('profile-avatar').textContent = ini;
+        document.getElementById('user-avatar').style.background = color;
+
+        // Hero
         document.getElementById('profile-name').textContent = user.nombre;
         document.getElementById('profile-email').textContent = user.email;
-        document.getElementById('profile-obj').textContent = user.objetivo;
+        document.getElementById('hero-obj').textContent = user.objetivo;
+        document.getElementById('hero-imc').textContent = 'IMC ' + imc;
+
+        // IMC
         document.getElementById('profile-imc').textContent = imc;
         document.getElementById('profile-imc-label').textContent = imcLabel(imc);
         document.getElementById('imc-marker').style.left = imcPos(parseFloat(imc)) + '%';
+
+        // Calorías
         document.getElementById('profile-cals').textContent = cals.toLocaleString('es-ES');
         document.getElementById('profile-prot').textContent = prot + 'g';
         document.getElementById('profile-carbs').textContent = carbs + 'g';
         document.getElementById('profile-fats').textContent = fats + 'g';
+        document.getElementById('st-cals').textContent = cals.toLocaleString('es-ES');
 
+        // Datos físicos
         const rows = [
             ['Edad', user.edad + ' años'],
-            ['Genero', user.genero || '—'],
+            ['Género', user.genero || '—'],
             ['Peso', user.peso + ' kg'],
             ['Altura', user.altura + ' cm'],
+            ['Nivel actividad', user.nivelActividad || 'Moderado'],
             ['Miembro desde', user.fechaRegistro ? user.fechaRegistro.split('T')[0] : '—']
         ];
         document.getElementById('profile-data-rows').innerHTML =
             rows.map(([k,v]) => `<div class="info-row"><span>${k}</span><span>${v}</span></div>`).join('');
 
+        // Progreso hacia objetivo de peso
+        if (user.pesoObjetivo && user.pesoInicial) {
+            const total = Math.abs(user.pesoObjetivo - user.pesoInicial);
+            const avance = Math.abs(user.peso - user.pesoInicial);
+            const pct = total > 0 ? Math.min(100, Math.round(avance / total * 100)) : 0;
+            document.getElementById('wp-label').textContent = pct + '%';
+            document.getElementById('wp-fill').style.width = pct + '%';
+        } else {
+            document.getElementById('weight-progress-section').style.display = 'none';
+        }
+
+        // Lesiones
         const lt = document.getElementById('profile-lesions');
         lt.innerHTML = user.lesiones && user.lesiones.length
             ? user.lesiones.map(l => `<span class="lesion-tag">${l}</span>`).join('')
             : '<span style="color:var(--text3);font-size:13px">Sin lesiones indicadas</span>';
-
         document.getElementById('profile-lesion-notes').textContent = user.lesionNotas || '';
     }
 
-    function toggleEdit() {
-        const editSec = document.getElementById('edit-section');
-        const viewSec = document.getElementById('view-section');
-        const isEditing = editSec.classList.contains('active');
-        if (!isEditing) {
-            document.getElementById('edit-nombre').value = user.nombre;
-            document.getElementById('edit-edad').value = user.edad;
-            document.getElementById('edit-genero').value = user.genero || 'Hombre';
-            document.getElementById('edit-peso').value = user.peso;
-            document.getElementById('edit-altura').value = user.altura;
-            document.getElementById('edit-objetivo').value = user.objetivo;
-            document.getElementById('edit-lesion-notas').value = user.lesionNotas || '';
-            Object.entries(lesionMap).forEach(([nombre, id]) => {
-                const el = document.getElementById(id);
-                if (el) el.checked = user.lesiones && user.lesiones.includes(nombre);
-            });
-            document.getElementById('edit-error').classList.add('hidden');
-            document.getElementById('edit-success').classList.add('hidden');
+    function renderLogros(rutinas, records) {
+        const completadas = rutinas.filter(r => r.completada).length;
+        const logros = [
+            {
+                nombre: 'Primera rutina',
+                sub: rutinas.length > 0 ? 'Completado' : 'Crea tu primera rutina',
+                unlocked: rutinas.length > 0,
+                color: '#e07b22',
+                icon: '<path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/>'
+            },
+            {
+                nombre: 'Primer récord',
+                sub: records.length > 0 ? 'Completado' : 'Registra tu primer PR',
+                unlocked: records.length > 0,
+                color: '#378add',
+                icon: '<circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/>'
+            },
+            {
+                nombre: '5 rutinas completadas',
+                sub: completadas >= 5 ? 'Completado' : `${completadas}/5 completadas`,
+                unlocked: completadas >= 5,
+                color: '#639922',
+                icon: '<polyline points="20 6 9 17 4 12"/>'
+            },
+            {
+                nombre: '10 récords',
+                sub: records.length >= 10 ? 'Completado' : `${records.length}/10 récords`,
+                unlocked: records.length >= 10,
+                color: '#8b5cf6',
+                icon: '<path d="M6 4v16M18 4v16M3 8h3M18 8h3M3 16h3M18 16h3M6 12h12"/>'
+            },
+            {
+                nombre: 'Rutina con IA',
+                sub: rutinas.some(r => r.descripcion?.startsWith('[IA]')) ? 'Completado' : 'Genera una rutina con IA',
+                unlocked: rutinas.some(r => r.descripcion?.startsWith('[IA]')),
+                color: '#6366f1',
+                icon: '<rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/>'
+            },
+            {
+                nombre: '20 rutinas completadas',
+                sub: completadas >= 20 ? 'Completado' : `${completadas}/20 completadas`,
+                unlocked: completadas >= 20,
+                color: '#ec4899',
+                icon: '<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>'
+            }
+        ];
+
+        document.getElementById('logros-grid').innerHTML = logros.map(l => `
+            <div class="logro-item ${l.unlocked ? '' : 'logro-locked'}">
+                <div class="logro-icon" style="background:${l.color}22;color:${l.color}">
+                    <svg viewBox="0 0 24 24">${l.icon}</svg>
+                </div>
+                <div>
+                    <div class="logro-name">${l.nombre}</div>
+                    <div class="logro-sub">${l.sub}</div>
+                </div>
+            </div>`).join('');
+    }
+
+    async function loadStats() {
+        const hoy = new Date().toISOString().split('T')[0];
+        try {
+            const [rutinas, records, comidas] = await Promise.all([
+                fetch(`/api/rutinas/usuario/${user.id}`).then(r => r.json()),
+                apiGetRecords(user.id),
+                fetch(`/api/dieta/comidas/${user.id}?fecha=${hoy}`).then(r => r.json())
+            ]);
+
+            document.getElementById('st-rutinas').textContent = rutinas.length;
+            document.getElementById('st-completadas').textContent = rutinas.filter(r => r.completada).length;
+            document.getElementById('st-records').textContent = records.length;
+            document.getElementById('st-comidas').textContent = comidas.length;
+
+            // Racha de días con comidas (simplificado: si hay comidas hoy = al menos 1)
+            document.getElementById('hero-streak').textContent = comidas.length > 0 ? '🔥 Activo hoy' : '💤 Sin registro hoy';
+
+            renderLogros(rutinas, records);
+        } catch(e) {
+            console.error(e);
         }
-        editSec.classList.toggle('active', !isEditing);
-        viewSec.style.display = isEditing ? 'block' : 'none';
+    }
+
+    // Color picker
+    function openColorPicker() {
+        const grid = document.getElementById('color-picker-grid');
+        const ini = getInitials(user.nombre);
+        document.getElementById('color-preview-initials').textContent = ini;
+        document.getElementById('color-preview').style.background = selectedColor;
+
+        grid.innerHTML = AVATAR_COLORS.map(c => `
+            <div class="color-swatch ${c === selectedColor ? 'selected' : ''}"
+                 style="background:${c}"
+                 onclick="selectColor('${c}')"></div>`).join('');
+        openModal('modal-color');
+    }
+
+    function selectColor(color) {
+        selectedColor = color;
+        document.getElementById('color-preview').style.background = color;
+        document.querySelectorAll('.color-swatch').forEach(s => {
+            s.classList.toggle('selected', s.style.background === color || s.style.backgroundColor === color);
+        });
+    }
+
+    async function saveColor() {
+        try {
+            const updated = await apiUpdateUsuario(user.id, {...user, avatarColor: selectedColor});
+            user = {...user, ...updated, avatarColor: selectedColor};
+            saveUser(user);
+            renderProfile();
+            closeModal('modal-color');
+            showToast('Color actualizado', 'success');
+        } catch(e) {
+            showToast('Error al guardar', 'error');
+        }
+    }
+
+    function openEditModal() {
+        document.getElementById('edit-nombre').value = user.nombre;
+        document.getElementById('edit-edad').value = user.edad;
+        document.getElementById('edit-genero').value = user.genero || 'Hombre';
+        document.getElementById('edit-peso').value = user.peso;
+        document.getElementById('edit-altura').value = user.altura;
+        document.getElementById('edit-objetivo').value = user.objetivo;
+        document.getElementById('edit-actividad').value = user.nivelActividad || 'moderado';
+        document.getElementById('edit-lesion-notas').value = user.lesionNotas || '';
+        Object.entries(lesionMap).forEach(([nombre, id]) => {
+            const el = document.getElementById(id);
+            if (el) el.checked = user.lesiones && user.lesiones.includes(nombre);
+        });
+        document.getElementById('edit-error').classList.add('hidden');
+        document.getElementById('edit-success').classList.add('hidden');
+        openModal('modal-edit');
     }
 
     async function saveProfile() {
         const errEl = document.getElementById('edit-error');
         const sucEl = document.getElementById('edit-success');
         errEl.classList.add('hidden'); sucEl.classList.add('hidden');
+
         const lesiones = Object.entries(lesionMap)
             .filter(([, id]) => { const el = document.getElementById(id); return el && el.checked; })
             .map(([nombre]) => nombre);
+
         const datos = {
             nombre: document.getElementById('edit-nombre').value.trim(),
             edad: parseInt(document.getElementById('edit-edad').value),
@@ -216,13 +597,17 @@
             peso: parseFloat(document.getElementById('edit-peso').value),
             altura: parseInt(document.getElementById('edit-altura').value),
             objetivo: document.getElementById('edit-objetivo').value,
+            nivelActividad: document.getElementById('edit-actividad').value,
             lesiones,
-            lesionNotas: document.getElementById('edit-lesion-notas').value
+            lesionNotas: document.getElementById('edit-lesion-notas').value,
+            avatarColor: user.avatarColor || selectedColor
         };
+
         if (!datos.nombre || isNaN(datos.peso) || isNaN(datos.altura)) {
             errEl.textContent = 'Rellena todos los campos obligatorios.';
             errEl.classList.remove('hidden'); return;
         }
+
         try {
             const updated = await apiUpdateUsuario(user.id, datos);
             user = {...user, ...updated};
@@ -230,14 +615,69 @@
             renderProfile();
             sucEl.textContent = 'Perfil actualizado correctamente.';
             sucEl.classList.remove('hidden');
-            setTimeout(() => toggleEdit(), 1500);
+            setTimeout(() => closeModal('modal-edit'), 1500);
+            showToast('Perfil guardado', 'success');
         } catch(e) {
             errEl.textContent = 'Error al guardar los cambios.';
             errEl.classList.remove('hidden');
         }
     }
 
+    async function cambiarPassword() {
+        const errEl = document.getElementById('pwd-error');
+        const sucEl = document.getElementById('pwd-success');
+        errEl.classList.add('hidden'); sucEl.classList.add('hidden');
+
+        const actual = document.getElementById('pwd-actual').value;
+        const nueva = document.getElementById('pwd-nueva').value;
+        const repetir = document.getElementById('pwd-repetir').value;
+
+        if (!actual || !nueva || !repetir) {
+            errEl.textContent = 'Rellena todos los campos.';
+            errEl.classList.remove('hidden'); return;
+        }
+        if (nueva !== repetir) {
+            errEl.textContent = 'Las contraseñas no coinciden.';
+            errEl.classList.remove('hidden'); return;
+        }
+        if (nueva.length < 6) {
+            errEl.textContent = 'La contraseña debe tener al menos 6 caracteres.';
+            errEl.classList.remove('hidden'); return;
+        }
+
+        try {
+            const res = await fetch(`/api/usuarios/${user.id}/password`, {
+                method: 'PATCH',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({passwordActual: actual, passwordNueva: nueva})
+            });
+            if (!res.ok) {
+                const err = await res.json();
+                errEl.textContent = err.message || 'Contraseña actual incorrecta.';
+                errEl.classList.remove('hidden'); return;
+            }
+            sucEl.textContent = 'Contraseña actualizada correctamente.';
+            sucEl.classList.remove('hidden');
+            document.getElementById('pwd-actual').value = '';
+            document.getElementById('pwd-nueva').value = '';
+            document.getElementById('pwd-repetir').value = '';
+            setTimeout(() => closeModal('modal-password'), 1500);
+            showToast('Contraseña actualizada', 'success');
+        } catch(e) {
+            errEl.textContent = 'Error al cambiar la contraseña.';
+            errEl.classList.remove('hidden');
+        }
+    }
+
+    document.querySelectorAll('.modal-overlay').forEach(o => {
+        o.addEventListener('click', e => { if (e.target === o) o.classList.remove('open'); });
+    });
+
+    // El botón editar abre el modal con los datos rellenos
+    document.querySelector('.btn-primary.btn-sm').addEventListener('click', openEditModal);
+
     renderProfile();
+    loadStats();
 </script>
 </body>
 </html>
